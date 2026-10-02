@@ -68,6 +68,39 @@ const contains = (pad, point) => {
   }
   return Math.abs(x) <= pad.width / 2 + eps && Math.abs(y) <= pad.height / 2 + eps
 }
+// Standard tented vias must not drill through populated SMT solder lands.
+const distanceToPad = (pad, point) => {
+  if (contains(pad, point)) return 0
+  if (pad.shape === "polygon") {
+    return Math.min(...pad.points.map((a, i) => {
+      const b = pad.points[(i + 1) % pad.points.length]
+      const vx = b.x - a.x, vy = b.y - a.y
+      const t = Math.max(0, Math.min(1, ((point.x - a.x) * vx + (point.y - a.y) * vy) / (vx * vx + vy * vy)))
+      return Math.hypot(point.x - a.x - t * vx, point.y - a.y - t * vy)
+    }))
+  }
+  const angle = -(pad.ccw_rotation ?? 0) * Math.PI / 180
+  const dx = point.x - pad.x, dy = point.y - pad.y
+  const x = dx * Math.cos(angle) - dy * Math.sin(angle)
+  const y = dx * Math.sin(angle) + dy * Math.cos(angle)
+  if (pad.shape === "circle") return Math.max(0, Math.hypot(x, y) - pad.radius)
+  if (pad.shape === "pill" || pad.shape === "rotated_pill") {
+    const horizontal = pad.width >= pad.height
+    const along = Math.abs(horizontal ? x : y), across = horizontal ? y : x
+    return Math.max(0, Math.hypot(Math.max(0, along - Math.abs(pad.width - pad.height) / 2), across) - Math.min(pad.width, pad.height) / 2)
+  }
+  return Math.hypot(Math.max(0, Math.abs(x) - pad.width / 2), Math.max(0, Math.abs(y) - pad.height / 2))
+}
+for (const pad of entries("pcb_smtpad")) {
+  const source = owners.get(pad.pcb_component_id)
+  if (!isPopulated(source) || pad.is_covered_with_solder_mask) continue
+  for (const via of vias) {
+    if (!via.layers.includes(pad.layer)) continue
+    check(distanceToPad(pad, via) >= via.hole_diameter / 2 - eps,
+      `${source.name}.${pad.port_hints?.join("/")}: via drill intersects solder land at (${via.x.toFixed(3)}, ${via.y.toFixed(3)})`)
+  }
+}
+
 const pastes = entries("pcb_solder_paste")
 for (const pad of entries("pcb_smtpad")) {
   const source = owners.get(pad.pcb_component_id)

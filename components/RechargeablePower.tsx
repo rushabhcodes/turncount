@@ -49,6 +49,8 @@ export const RechargeablePower = () => (
       pcbX={-16} pcbY={0} pcbRotation={90} />
     <BQ24074RGTR name="U2" schSectionName="power" schX={-36} schY={0}
       pcbX={-12} pcbY={11} />
+    <tracehint for=".U2 > .N_CHG" offset={{ x: -9.5, y: 9.1, via: true, to_layer: "bottom" }} />
+    <tracehint for=".R9 > .pin2" offset={{ x: 1.5, y: -10.5, via: true, to_layer: "bottom" }} />
     <tracehint for=".U2 > .IN" offset={{ x: -11.25, y: 13.2, via: true, to_layer: "bottom" }} />
     <TPS7A0230PDBVR name="U3" schSectionName="power" schX={-22} schY={0}
       pcbX={-4} pcbY={14} pcbRotation={180} />

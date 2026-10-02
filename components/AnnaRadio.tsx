@@ -3,8 +3,8 @@ import { ANNA_B112_00B } from "../imports/ANNA_B112_00B"
 
 // u-blox UBX-18009821 R11, Appendix B, Figures 29 and 30.
 // Reference origin is the lower-left of the 6.5 mm module in Figure 29.
-// Numeric pcbPath points use the first port’s local frame (module rotation included).
-const referencePoint = (x: number, y: number) => ({ x: y - 0.410026, y: 1.060012 - x })
+// Numeric pcbPath points use the module’s local frame, including its rotation.
+const referencePoint = (x: number, y: number) => ({ x: y - 3.25, y: 3.25 - x })
 const groundPins = ["GND3", "GND2", "GND1", "GND5", "GND4", "GND7",
   "GND6", "GND10", "GND9", "GND12", "GND8", "GND14", "GND13",
   "GND11", "EGP1", "EGP2", "EGP4", "EGP3", "XL1", "XL2", "ANT_GND2"]
@@ -13,6 +13,10 @@ export const AnnaRadio = () => (
   <>
     <ANNA_B112_00B name="U1" schSectionName="radio" schX={20} schY={0}
       pcbX={15.8} pcbY={0} pcbRotation={-90} />
+    <tracehint for=".U1 > .SWDIO" offsets={[
+      { x: 16.073162, y: -0.649859, trace_width: 0.1 },
+      { x: 16.073162, y: -3.75, via: true, to_layer: "bottom", trace_width: 0.1 },
+    ]} />
     <trace name="radio_supply" from=".U1 > .VCC" to="net.V3V0" />
     {groundPins.map((pin) => (
       <Fragment key={pin}>
