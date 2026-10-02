@@ -1,0 +1,54 @@
+name: Circuit verification
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fabrication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - name: Verify native JLCPCB import
+        run: |
+          rm imports/ANNA_B112_00B.tsx
+          npx tsci import C2931350 --jlcpcb --use-exact-footprint
+          cat imports/ANNA_B112_00B.tsx
+      - run: npm run typecheck
+      - run: npx tsci check netlist
+      - run: npx tsci check schematic-placement
+      - run: npx tsci check placement
+      - run: npx tsci build
+      - run: npm run check:power
+      - run: npm run check:fabrication
+      - run: npx tsci check shorts dist/index/circuit.json
+      - name: Check exported Gerber copper
+        run: |
+          python -m pip install gerbonara shapely
+          npx tsci export dist/index/circuit.json -f gerbers -o "$RUNNER_TEMP/fab.zip"
+          python -m zipfile -e "$RUNNER_TEMP/fab.zip" "$RUNNER_TEMP/fab"
+          python scripts/check-gerbers.py "$RUNNER_TEMP/fab" dist/index/circuit.json
+      - name: Preserve diagnostic circuit JSON
+        if: always()
+        run: |
+          if [ -f dist/index/circuit.json ]; then
+            node -e 'const c=require("./dist/index/circuit.json"); console.log(JSON.stringify(c.filter(e=>e.type.endsWith("_error")),null,2))'
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: circuit-diagnostics
+          path: |
+            dist/index/circuit.json
+            imports/ANNA_B112_00B.tsx
+          if-no-files-found: ignore

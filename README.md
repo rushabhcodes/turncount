@@ -17,9 +17,9 @@ See [the fabrication review](FABRICATION_REVIEW.md) for verified geometry, nativ
 | Three-position pack/NTC connector | [JST S3B-PH-SM4-TB(LF)(SN)](https://www.lcsc.com/product-detail/C265101.html) | C265101 |
 | Charger input bypass, 1 µF / 50 V | Samsung CL10A105KB8NNNC | C15849 |
 | Battery, system and regulator bypass, 10 µF / 25 V | Samsung CL21A106KAYNNNE | C15850 |
-| Bluetooth module | Raytac MDBT42Q-512KV2 (nRF52832) | No verified JLCPCB listing yet |
+| Bluetooth module | [u-blox ANNA-B112-00B](https://jlcpcb.com/partdetail/ANNA_B112_00B/C2931350) (nRF52832) | C2931350 |
 
-Stock is indicative and must be checked when ordering. The encoder, USB-C receptacle, charger, regulator and pack connector were generated using `tsci import <code> --jlcpcb --use-exact-footprint`, **without `--download`**. Their remote OBJ/STEP model references come from the selected JLCPCB/EasyEDA entries. No substitute encoder model, custom knob or battery model has been added.
+Stock is indicative and must be checked when ordering. The radio, encoder, USB-C receptacle, charger, regulator and pack connector were generated using `tsci import <code> --jlcpcb --use-exact-footprint`, **without `--download`**. Their remote OBJ/STEP model references come from the selected JLCPCB/EasyEDA entries. No substitute encoder model, custom knob or battery model has been added.
 
 The imported pack connector's two mechanical solder tabs are represented as separate ground pads; the three electrical contacts are unchanged. Its aliases identify the intended harness wiring, not a universal battery connector pinout.
 
@@ -78,13 +78,24 @@ The new encoder drawing gives a **50 mA / 12 V rating**, but **does not specify 
 
 ## Radio and programming
 
-The module is placed near the right edge with an antenna keepout on both copper layers extending to the circular edge, plus Raytac's separate top-layer exclusion under the module. The battery allocation ends before that region. Verify assembled RF performance with the battery, magnets, phone and enclosure.
+The ANNA-B112-00B module uses an exact JLCPCB import and the linked original
+OBJ/STEP models. It is 6.5 × 6.5 × 1.2 mm and operates from the regulated 3.0 V rail.
 
-GPIO assignments remain P0.11 for A, P0.12 for B, P0.13 for push and P0.21 for reset. Test pads expose the regulated supply, ground, SWD, reset, A/B, battery, system supply, USB input and charger status. The fixture must not drive voltage into `VBAT`; avoid contention with USB or battery power when using an externally powered debug fixture.
+Encoder A/B/push connect to module GPIO_13/14/15, corresponding to nRF52832
+P0.14/P0.15/P0.16. Reset remains P0.21. Test pads expose supply, ground, SWD,
+reset, A/B, battery, system supply, USB input and charger status. Do not drive
+the battery rail from the debug fixture or contend with USB/battery power.
 
-The Raytac land pattern is adapted from [Bishop Fox's footprint](https://github.com/BishopFox/mellon/blob/main/Mellon/ul_MDBT42Q-P512KV2/KiCADv6/footprints.pretty/MDBT42Q-P512KV2_RAY.kicad_mod). Connected pin numbers and land dimensions were checked against the manufacturer-authored [MDBT42Q Version N datasheet](https://assets.sourcengine.com/datasheets/ccd2b0a7-5c4f-4793-97cd-c7ebe72bab62.pdf). Unused pads 40/41 are omitted as Raytac permits. Its existing [MDBT42Q STEP model](https://github.com/yuhki50/kicad-packages3D/blob/master/Raytac.3dshapes/MDBT42Q.step) is used under [CC BY-SA 4.0](https://github.com/yuhki50/kicad-packages3D/blob/master/LICENSE), with placement corrected to the physical module datum. Sourcing this module for JLCPCB-only assembly remains unresolved.
+The internal antenna feed, return tuning strip, copper voids and ground
+stitching follow the PCB-edge design in Appendix B of the
+[u-blox integration manual](https://content.u-blox.com/sites/default/files/ANNA-B112_SIM_UBX-18009821.pdf).
+ANT_PCB is open. The circular ground plane and assembled enclosure need RF
+qualification; this carrier is not claimed to inherit reference-board certification.
 
-This board has **no external 32.768 kHz crystal** and **no external DC-DC inductors**. Firmware must select the calibrated internal low-frequency RC clock and LDO mode. Do not enable the nRF52832 DC-DC converter without adding the required external components. Firmware is not implemented in this repository.
+There is no external 32.768 kHz crystal. XL1/XL2 are grounded for calibrated
+internal LFRC operation. ANNA includes DC-DC inductors; use its manufacturer
+firmware configuration. Factory u-connectXpress must be erased for a custom
+counter application. Firmware is not implemented yet.
 
 ## Firmware and app proposal
 
@@ -116,6 +127,6 @@ npx tsci check shorts dist/index/circuit.json
 
 `check:power` verifies built-netlist rail isolation, separate USB-C CC pull-downs, charger mode, the pack sensor connection, unobstructed battery allocation and copper containment inside the circular board. It supplements the CLI checks; it does not prove charger behavior, thermal performance or mechanical fit. Generated previews remain in ignored `dist/`; snapshots and ZIP bundles are excluded from the source package.
 
-`check:fabrication` intentionally fails while U1 lacks a JLCPCB assembly part code. It also checks via dimensions/spacing, plated-hole rings, trace widths, stencil coverage and Circuit JSON errors. `scripts/check-gerbers.py` independently checks actual exported copper connectivity and manufacturing geometry; its commands and dependencies are in the review.
+`check:fabrication` requires JLCPCB codes on every populated part and checks via dimensions/spacing, plated-hole rings, trace widths, stencil coverage and Circuit JSON errors. `scripts/check-gerbers.py` independently checks actual exported copper connectivity and manufacturing geometry; its commands and dependencies are in the review.
 
-CLI lint warnings remain for generic passive footprints, missing pin annotations/courtyards and saved-route export. The KiCad export has keepout and filled-zone translation limitations described in the review. The exact battery, low-current input qualification, capacitor bias, radio sourcing, RF performance and enclosure fit are remaining product gates.
+CLI lint warnings remain for generic passive footprints, missing pin annotations/courtyards and saved-route export. The KiCad export has keepout and filled-zone translation limitations described in the review. The exact battery, low-current input qualification, capacitor bias, current part stock, RF performance and enclosure fit are remaining product gates.

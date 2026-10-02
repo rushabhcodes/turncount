@@ -47,6 +47,19 @@ def geometry(filename):
     return result
 
 
+radio_source = next(e for e in circuit if e["type"] == "source_component" and e["name"] == "U1")
+radio_pcb = next(e for e in circuit if e["type"] == "pcb_component" and e["source_component_id"] == radio_source["source_component_id"])
+radio_lands = unary_union([
+    box(e["x"] - e["width"] / 2, e["y"] - e["height"] / 2,
+        e["x"] + e["width"] / 2, e["y"] + e["height"] / 2)
+    for e in circuit if e["type"] == "pcb_smtpad" and e["pcb_component_id"] == radio_pcb["pcb_component_id"]
+])
+rf_voids = {
+    "top": [box(18.165, 0.15, 22.535, 3.95), box(17.412, -3.25, 17.815, 3.95)],
+    "bottom": [box(17.551, 0.15, 22.535, 4.8)],
+}
+outboard_void = box(12.55, 4.3, 24.5, 24.5)
+
 metrics = {}
 conductors = {}
 for prefix, layer in [("F", "top"), ("B", "bottom")]:
@@ -65,13 +78,10 @@ for prefix, layer in [("F", "top"), ("B", "bottom")]:
         assert gap >= 0.199, f"{layer}: NPTH copper clearance {gap:.4f} mm"
     for via in (entry for entry in circuit if entry["type"] == "pcb_via"):
         assert not mask.covers(Point(via["x"], via["y"])), f"{layer}: via is not tented"
-    # The antenna exclusion must be empty in the actual exported copper.
-    antenna = box(11.2, 4.21, 24.5, 24)
-    intrusion = copper.intersection(antenna).area
-    assert intrusion < 1e-7, f"{layer}: copper intrudes into antenna region"
-    if layer == "top":
-        under_module_intrusion = copper.intersection(box(16, 1.1, 20.4, 4.21)).area
-        assert under_module_intrusion < 1e-7, "Top copper intrudes into Raytac under-module exclusion"
+    # Imported module lands are allowed; no other copper may enter RF voids.
+    foreign_copper = copper.difference(radio_lands.buffer(1e-5)) if layer == "top" else copper
+    intrusion = foreign_copper.intersection(unary_union(rf_voids[layer] + [outboard_void])).area
+    assert intrusion < 1e-7, f"{layer}: foreign copper intrudes into ANNA antenna region"
     metrics[layer] = {
         "copper_edge_gap_mm": round(edge_gap, 4),
         "minimum_NPTH_copper_gap_mm": round(min(drill_gaps), 4),
