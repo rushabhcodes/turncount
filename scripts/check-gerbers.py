@@ -80,7 +80,12 @@ for prefix, layer in [("F", "top"), ("B", "bottom")]:
         assert not mask.covers(Point(via["x"], via["y"])), f"{layer}: via is not tented"
     # Imported module lands are allowed; no other copper may enter RF voids.
     foreign_copper = copper.difference(radio_lands.buffer(1e-5)) if layer == "top" else copper
-    intrusion = foreign_copper.intersection(unary_union(rf_voids[layer] + [outboard_void])).area
+    intrusion_shape = foreign_copper.intersection(unary_union(rf_voids[layer] + [outboard_void]))
+    intrusion = intrusion_shape.area
+    if intrusion >= 1e-7:
+        print(json.dumps({"layer": layer, "RF_intrusion_area_mm2": intrusion,
+                          "RF_intrusion_bounds": intrusion_shape.bounds,
+                          "RF_intrusion_geometry": intrusion_shape.simplify(0.0001).__geo_interface__}))
     assert intrusion < 1e-7, f"{layer}: foreign copper intrudes into ANNA antenna region"
     metrics[layer] = {
         "copper_edge_gap_mm": round(edge_gap, 4),
