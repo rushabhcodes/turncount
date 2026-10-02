@@ -56,8 +56,8 @@ export default () => (
     <GT_EVA01AA_L1 name="ENC1"
       schSectionName="inputs" schX={0} schY={-15} pcbX={0} pcbY={encoderFootprintOffsetY} />
     {/* Keep the push-signal layer change outside the encoder's solder land. */}
-    <tracehint for=".ENC1 > .A" offset={{ x: -1.5, y: -5.5, via: true, to_layer: "bottom" }} />
-    <tracehint for=".ENC1 > .B" offset={{ x: 1.5, y: -5.5, via: true, to_layer: "bottom" }} />
+    <tracehint for=".ENC1 port.pin3" offset={{ x: -1.5, y: -5.5, via: true, to_layer: "bottom" }} />
+    <tracehint for=".ENC1 port.pin5" offset={{ x: 1.5, y: -5.5, via: true, to_layer: "bottom" }} />
     <tracehint for=".ENC1 port.pin6" offset={{ x: -0.75, y: -4.5, via: true, to_layer: "bottom" }} />
 
     <capacitor name="C1" capacitance="100nF" footprint="0402" schSectionName="power" schX={-16} schY={2} schRotation={-90} pcbX={10.5} pcbY={3} pcbRotation={180} />
