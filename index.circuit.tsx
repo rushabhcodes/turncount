@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import { AnnaRadio } from "./components/AnnaRadio"
+import { AnnaRadio, radioPathPoint } from "./components/AnnaRadio"
 import { RechargeablePower } from "./components/RechargeablePower"
 import { ProbePad } from "./components/ProbePad"
 import { GT_EVA01AA_L1 } from "./imports/GT_EVA01AA_L1"
@@ -28,7 +28,7 @@ const traces: [string, string][] = [
   ]),
   ["R7.pin1", "net.V3V0"], ["R7.pin2", "U1.RESET_N"],
   ["TP1.pin1", "net.V3V0"], ["TP2.pin1", "net.GND"],
-  ["TP3.pin1", "U1.SWDCLK"], ["TP4.pin1", "U1.SWDIO"],
+  ["U1.SWDCLK", "TP3.pin1"], ["U1.SWDIO", "TP4.pin1"],
   ["TP5.pin1", "U1.RESET_N"], ["TP6.pin1", "net.ENC_A"],
   ["TP7.pin1", "net.ENC_B"],
 ]
@@ -56,6 +56,12 @@ export default () => (
     <GT_EVA01AA_L1 name="ENC1"
       schSectionName="inputs" schX={0} schY={-15} pcbX={0} pcbY={encoderFootprintOffsetY} />
     {/* Keep the push-signal layer change outside the encoder's solder land. */}
+    {[-1.499997, 1.499997].map((x) => (
+      <Fragment key={x}>
+        <keepout shape="circle" pcbX={x} pcbY={-1.4} radius="0.58mm"
+          layers={["top", "bottom"]} excludeRefs={[".ENC1"]} />
+      </Fragment>
+    ))}
     <tracehint for=".ENC1 port.pin3" offset={{ x: -1.5, y: -5.5, via: true, to_layer: "bottom" }} />
     <tracehint for=".ENC1 port.pin5" offset={{ x: 1.5, y: -5.5, via: true, to_layer: "bottom" }} />
     <tracehint for=".ENC1 port.pin6" offset={{ x: -0.75, y: -4.5, via: true, to_layer: "bottom" }} />
@@ -78,7 +84,20 @@ export default () => (
     {traces.map(([from, to], i) => (
       <Fragment key={`trace-${i}`}>
         <trace name={`signal_${i}`} from={from} to={to}
-          thickness={to === "U1.SWDIO" ? "0.1mm" : undefined} />
+          thickness={from === "U1.SWDIO" || from === "U1.SWDCLK" ? "0.1mm" : undefined}
+          pcbPath={from === "U1.SWDIO" ? [
+            radioPathPoint(15.92, -0.649859),
+            radioPathPoint(15.92, -1.1),
+            radioPathPoint(15.748057, -1.1),
+            radioPathPoint(15.748057, -2.515),
+            radioPathPoint(16.073162, -2.515),
+            {...radioPathPoint(16.073162, -3.75), via: true, fromLayer: "top", toLayer: "bottom"},
+            {...radioPathPoint(5, -11.9), via: true, fromLayer: "bottom", toLayer: "top"},
+          ] : from === "U1.SWDCLK" ? [
+            radioPathPoint(16.723163, -1.299972),
+            {...radioPathPoint(16.723163, -4.5), via: true, fromLayer: "top", toLayer: "bottom"},
+            {...radioPathPoint(9, -10), via: true, fromLayer: "bottom", toLayer: "top"},
+          ] : undefined} />
       </Fragment>
     ))}
   </board>

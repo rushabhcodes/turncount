@@ -4,7 +4,110 @@ import { ANNA_B112_00B } from "../imports/ANNA_B112_00B"
 // u-blox UBX-18009821 R11, Appendix B, Figures 29 and 30.
 // Reference origin is the lower-left of the 6.5 mm module in Figure 29.
 // Numeric pcbPath points use the module’s local frame, including its rotation.
-const referencePoint = (x: number, y: number) => ({ x: y - 3.25, y: 3.25 - x })
+export const radioPathPoint = (x: number, y: number) => ({ x: -y, y: x - 15.8 })
+const referencePoint = (x: number, y: number) => radioPathPoint(19.05 - x, 3.25 - y)
+const unusedPads = [
+  {
+    "pin": 16,
+    "x": 12.960026000000001,
+    "y": 0.649986
+  },
+  {
+    "pin": 19,
+    "x": 12.960026000000001,
+    "y": -1.299972
+  },
+  {
+    "pin": 20,
+    "x": 12.960026000000001,
+    "y": -1.949958
+  },
+  {
+    "pin": 21,
+    "x": 13.610012000000001,
+    "y": 0.975106
+  },
+  {
+    "pin": 22,
+    "x": 13.610012000000001,
+    "y": 0.32512
+  },
+  {
+    "pin": 23,
+    "x": 13.610012000000001,
+    "y": -0.324866
+  },
+  {
+    "pin": 24,
+    "x": 13.610012000000001,
+    "y": -0.974852
+  },
+  {
+    "pin": 27,
+    "x": 14.447958,
+    "y": -2.839974
+  },
+  {
+    "pin": 31,
+    "x": 17.048156000000002,
+    "y": -2.839974
+  },
+  {
+    "pin": 26,
+    "x": 13.797972000000001,
+    "y": -2.839974
+  },
+  {
+    "pin": 28,
+    "x": 15.098198,
+    "y": -2.839974
+  },
+  {
+    "pin": 36,
+    "x": 15.423064,
+    "y": -2.189988
+  },
+  {
+    "pin": 30,
+    "x": 16.39817,
+    "y": -2.839974
+  },
+  {
+    "pin": 34,
+    "x": 14.123092,
+    "y": -2.189988
+  },
+  {
+    "pin": 37,
+    "x": 16.073050000000002,
+    "y": -2.189988
+  },
+  {
+    "pin": 25,
+    "x": 13.147986000000001,
+    "y": -2.839974
+  },
+  {
+    "pin": 29,
+    "x": 15.748184,
+    "y": -2.839974
+  },
+  {
+    "pin": 35,
+    "x": 14.773078000000002,
+    "y": -2.189988
+  },
+  {
+    "pin": 38,
+    "x": 17.2351,
+    "y": -1.949958
+  },
+  {
+    "pin": 45,
+    "x": 16.585114,
+    "y": -0.974852
+  }
+]
 const groundPins = ["GND3", "GND2", "GND1", "GND5", "GND4", "GND7",
   "GND6", "GND10", "GND9", "GND12", "GND8", "GND14", "GND13",
   "GND11", "EGP1", "EGP2", "EGP4", "EGP3", "XL1", "XL2", "ANT_GND2"]
@@ -13,10 +116,6 @@ export const AnnaRadio = () => (
   <>
     <ANNA_B112_00B name="U1" schSectionName="radio" schX={20} schY={0}
       pcbX={15.8} pcbY={0} pcbRotation={-90} />
-    <tracehint for=".U1 > .SWDIO" offsets={[
-      { x: 16.073162, y: -0.649859, trace_width: 0.1 },
-      { x: 16.073162, y: -3.75, via: true, to_layer: "bottom", trace_width: 0.1 },
-    ]} />
     <trace name="radio_supply" from=".U1 > .VCC" to="net.V3V0" />
     {groundPins.map((pin) => (
       <Fragment key={pin}>
@@ -31,6 +130,13 @@ export const AnnaRadio = () => (
       thickness="0.35mm" pcbPath={[".U1 > .ANT_GND1",
         referencePoint(1.060012, -0.875), referencePoint(2.001844, -0.875),
         ".U1 > .ANT_GND2"]} />
+    {/* Keep foreign traces and via pads away from unused GPIO lands. */}
+    {unusedPads.map(({pin, x, y}) => (
+      <Fragment key={pin}>
+        <keepout shape="rect" pcbX={x} pcbY={y} width="0.55mm" height="0.55mm"
+          layers={["top"]} excludeRefs={[".U1"]} />
+      </Fragment>
+    ))}
     {/* Reference antenna voids, plus clearance extended to the circular edge.
         Only the imported module's own lands are exempt. */}
     <keepout shape="rect" pcbX={20.35} pcbY={2.05}
