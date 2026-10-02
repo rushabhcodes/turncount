@@ -1,93 +1,109 @@
 # TurnCount
 
-TurnCount is a proposed battery-powered rotary counter that mounts magnetically to a phone. Turning the puck updates a signed count in a companion iOS or Android app over Bluetooth Low Energy (BLE). The puck has no display or charging port; it uses a replaceable CR2032 coin cell.
+TurnCount is a proposed rechargeable rotary counter that mounts magnetically to a phone. Turning the dial updates a signed count in a companion iOS or Android app over Bluetooth Low Energy (BLE).
 
-**Project status:** [`index.circuit.tsx`](index.circuit.tsx) now contains a first electrical PCB draft. It is a 48 mm circular prototype with an SMD encoder centered above a bottom-mounted coin cell holder, input filters, decoupling, and test pads. Firmware, enclosure, and phone apps remain proposed work. This is a review prototype, with unresolved electrical and sourcing questions below.
+**Status:** the repository implements a 48 mm circular, two-layer PCB prototype with USB-C charging, a regulated radio supply, and a low-profile SMD encoder. A bottom-side space allocation is provided for an external LiPo pack beneath the encoder. The exact battery SKU, knob, enclosure, firmware and apps are not yet implemented. This is a design review prototype, not a fabrication release.
 
-This README summarizes the *TurnCount product proposal*, team review version 1, dated 1 October 2026.
+## Selected components
 
-## V1 prototype
+| Function | Part | JLCPCB code |
+| --- | --- | --- |
+| Rotary encoder with downward push | [G-Switch GT-EVA01AA-L1](https://www.lcsc.com/product-detail/C17702124.html) | C17702124 |
+| USB-C receptacle, power only | [TYPE-C-31-M-12](https://www.lcsc.com/product-detail/C165948.html) | C165948 |
+| Charger with power-path management | [TI BQ24074RGTR](https://www.lcsc.com/product-detail/C54313.html) | C54313 |
+| Low-power 3.0 V regulator | [TI TPS7A0230PDBVR](https://www.lcsc.com/product-detail/C3747031.html) | C3747031 |
+| Three-position pack/NTC connector | [JST S3B-PH-SM4-TB(LF)(SN)](https://www.lcsc.com/product-detail/C265101.html) | C265101 |
+| Charger input bypass, 1 µF / 50 V | Samsung CL10A105KB8NNNC | C15849 |
+| Battery, system and regulator bypass, 10 µF / 25 V | Samsung CL21A106KAYNNNE | C15850 |
+| Bluetooth module | Raytac MDBT42Q-512KV2 (nRF52832) | No verified JLCPCB listing yet |
 
-The first prototype uses a stationary magnetic base and a shaft-driven top knob. It is intended to prove counting, BLE communication, battery operation, and mounting before developing the thinner contactless rotating-ring concept.
+Stock is indicative and must be checked when ordering. The encoder, USB-C receptacle, charger, regulator and pack connector were generated using `tsci import <code> --jlcpcb --use-exact-footprint`, **without `--download`**. Their remote OBJ/STEP model references come from the selected JLCPCB/EasyEDA entries. No substitute encoder model, custom knob or battery model has been added.
 
-| Area | Proposed V1 choice |
+The imported pack connector's two mechanical solder tabs are represented as separate ground pads; the three electrical contacts are unchanged. Its aliases identify the intended harness wiring, not a universal battery connector pinout.
+
+## Rechargeable supply
+
+```mermaid
+flowchart LR
+  USB[USB-C 5 V] --> CHG[BQ24074 charger and power path]
+  BAT[Protected 1S LiPo pack] <--> CHG
+  NTC[Pack-mounted 10k NTC] --> CHG
+  CHG --> SYS[VSYS]
+  SYS --> REG[TPS7A02 3.0 V regulator]
+  REG --> LOAD[Radio and encoder inputs]
+```
+
+- **USB-C:** each CC pin has its own 5.1 kΩ pull-down. VBUS contacts feed `USB_5V`; all ground and shell contacts are grounded. D+/D− and SBU contacts are unused; there is no USB data interface or PD negotiation.
+- **Charge control:** EN1 and EN2 are grounded, selecting TI's USB100 input-current limit. R10 = 8.66 kΩ requests approximately 103 mA charge current, but the 100 mA input limit and system load reduce the current actually available to the battery. R11 = 3.09 kΩ satisfies the required ILIM programming connection; resistor-controlled mode is not selected. CE is grounded to enable charging.
+- **Temperature and timers:** TS connects to the pack's temperature-sensor lead. The pack must provide a charger-compatible 10 kΩ NTC to pack ground; an open TS connection inhibits charging. TMR and ITERM are intentionally unconnected to select TI's default active safety timers and termination threshold. Do not replace temperature sensing with a fixed resistor for the enclosed product.
+- **Power path:** both BAT pins connect to `VBAT`, and both OUT pins connect to `VSYS`. System loading is separated from charge termination measurement. The device can operate from USB while charging or without a pack.
+- **Radio voltage:** the regulator sits between `VSYS` and `V3V0`. A charged pack can reach 4.2 V, and BQ24074 OUT is approximately 4.4 V on USB. Neither rail directly feeds the radio. The regulator supplies nominally 3.0 V while sufficient headroom is available; its output can fall near battery depletion. Its NC pin remains open.
+- **Status:** CHG and PGOOD have 100 kΩ pull-ups to `V3V0` and exposed test pads. Firmware access to these status signals has not been implemented.
+- **Capacitors:** the USB input uses 1 µF; BAT, VSYS and the regulator output each use 10 µF, with selected JLCPCB part codes above. Verify effective capacitance after DC bias and tolerance against the TI minimum requirements before fabrication.
+
+References: [BQ24074 datasheet](https://www.ti.com/lit/ds/symlink/bq24074.pdf), [TPS7A02 datasheet](https://www.ti.com/lit/ds/symlink/tps7a02.pdf).
+
+### Battery contract and placement
+
+The battery is an **external wired pack**, not a soldered coin cell or a selected purchasable SKU. The previous CR2032 holder is removed. The current mechanical allocation is **20 × 30 mm**, centered beneath the encoder, with a **3 mm cell-thickness target**. These are space constraints for the later mechanical design, not a claim that a specific protected pack fits.
+
+Select a conventional **1S, 3.7 V nominal / 4.2 V full-charge LiPo pack**, with approximately **200 mAh target capacity**, rated for the charger's worst-case current, integral overcharge/over-discharge/short-circuit protection, and a compatible pack-mounted NTC. Pack protection, sensor wiring, connector polarity and charging-temperature limits must be verified against its datasheet. A 4.35 V high-voltage cell is not the intended battery.
+
+| J2 electrical contact | Intended harness signal |
 | --- | --- |
-| Bluetooth module | Raytac MDBT42Q-512KV2 (nRF52832) |
-| Dial | [ALPS Alpine EC11J1525402](https://www.lcsc.com/product-detail/C209762.html), SMD with push switch; JLCPCB C209762 |
-| Power | Replaceable, non-rechargeable CR2032 in a Keystone 3002 holder |
-| PCB | Circular, two-layer, 1.6 mm FR4; 48 mm diameter |
-| Enclosure | 3D-printed base and knob, battery access, accessory-side magnetic mount |
-| Phone interface | Custom BLE GATT service and companion iOS and Android apps |
+| 1 | Protected pack positive, `VBAT` |
+| 2 | Protected pack negative, `GND` |
+| 3 | NTC sensor, referenced to pack negative |
 
-The encoder's 20 mm actuator and 24.5 mm mounting-surface-to-top height make this a thicker demonstration unit. The proposal does not specify a 10 mm product thickness. Magnetic mounting does not imply Qi2 certification or wireless charging support. Android use may require a compatible magnetic case or adapter.
+J2 is on the top at the left edge, keeping its body away from the cell space. The harness will need to reach it from the bottom; cable routing is part of the later enclosure work. No populated components or USB through-hole anchors occupy the reserved bottom rectangle. Add a suitable insulating mounting layer and verify pouch swelling, connector clearance and encoder locating-peg tolerances on the mechanical assembly. PCB thickness remains 1.6 mm. Overall enclosure thickness is not established yet.
 
-## Intended behavior
+## Encoder and mechanical direction
 
-- In **full-turn mode**, one clockwise revolution adds one and one counterclockwise revolution subtracts one. Reversing direction cancels partial progress.
-- In **step mode**, each validated detent changes the count. A GPIO edge alone is not a step.
-- A long dial press enters pairing mode. Reset is an explicit app action.
-- The app displays the count, connection status, mode, and battery warning while open. Phone-wide overlays and generic media, camera, shortcut, or HID control are outside V1 scope.
-- The device retains a signed cumulative step total while disconnected and sends an absolute state snapshot after reconnect, so duplicate or missed BLE notifications do not change the app's count incorrectly.
+The [GT-EVA01AA-L1 drawing](https://datasheet.lcsc.com/datasheet/pdf/d558dce12d76d23321eaeb216a98bcc8.pdf?productCode=C17702124) specifies a **4.8 × 3.9 × 3.5 mm** SMD encoder body with a square shaft socket and downward push switch. This replaces the ALPS part with a 24.5 mm actuator height. A short knob stem will be designed later; 3.5 mm describes the encoder body, not the final knob or enclosure height.
 
-The selected encoder has 15 pulses and 30 detents per revolution. The proposed four-edge decoder uses 60 legal quadrature transitions per full turn; direction, detent alignment, and debounce must be calibrated on hardware. The V1 operating limit is 60 rpm.
+The imported footprint is shifted relative to the board origin so its **shaft axis remains at (0, 0)**. The two locating-hole centers are 1.4 mm below the shaft axis in the manufacturer's drawing. The exact imported land pattern and remote model are retained.
 
-## Hardware design notes
+The encoder has **12 pulses and 12 detents per revolution**. A four-edge decoder therefore expects **48 legal quadrature transitions per turn**, with direction, detent alignment and bounce handling verified on hardware. A GPIO edge alone is not a step. A/B common and push D are grounded; push E feeds the switch input. The PCB includes 1 kΩ series resistors, 100 kΩ pull-ups and 1 nF capacitors on A, B and push.
 
-The module runs directly from the coin cell. The draft board includes 100 nF and 10 µF supply capacitors; 1 kΩ series resistors, 100 kΩ pull-ups, and 1 nF capacitors on encoder A/B and push; plus exposed SWD, supply, reset, and A/B test pads. GPIO assignments are P0.11 for A, P0.12 for B, P0.13 for push, and P0.21 for reset. Module pad numbers were checked against the [MDBT42Q-512K KiCad symbol](https://github.com/devbisme/skidl/blob/master/src/skidl/tools/skidl/libs/RF_Module_sklib.py); confirm them against the exact Raytac variant and reference circuit before fabrication.
+### Contact-current qualification remains open
 
-The encoder and holder are local components generated with `tsci import C209762 --jlcpcb --use-exact-footprint` and `tsci import C5503436 --jlcpcb --use-exact-footprint`, without `--download`. Their 3D models use remote tscircuit model CDN URLs; no OBJ or STEP files for these imported parts are stored in the project. The imported holder has two separate pads on the same positive metal contact; the component models those pads as internally connected so the PCB router can identify each pad. The exact Raytac module is absent from the tscircuit registry and JLCPCB search, so its land pattern remains adapted from [Bishop Fox's MDBT42Q-P512KV2 footprint](https://github.com/BishopFox/mellon/blob/main/Mellon/ul_MDBT42Q-P512KV2/KiCADv6/footprints.pretty/MDBT42Q-P512KV2_RAY.kicad_mod). Its separate local [MDBT42Q STEP model](https://github.com/yuhki50/kicad-packages3D/blob/master/Raytac.3dshapes/MDBT42Q.step) is used for visualization under [CC BY-SA 4.0](https://github.com/yuhki50/kicad-packages3D/blob/master/LICENSE). Verify the P variant's pad geometry and the 3D model against the selected 512KV2 module. The encoder retains two non-plated locating holes, with 1.2 mm locating pegs specified in the drawing. A 1.6 mm PCB is intended to contain these pegs above the battery face; production peg tolerances still need confirmation. The holder's PCB negative contact is a 5 mm circular land offset 4 mm from center, within the CR2032 negative face, to clear both holes. The holder's two solder tabs and remote CAD model are retained. Verify contact pressure and solder-mask isolation on an assembled sample.
+The new encoder drawing gives a **50 mA / 12 V rating**, but **does not specify a minimum reliable contact current or voltage**. Those are maximum/load ratings, not evidence that 20–30 µA sensing is qualified. The previous ALPS 1 mA minimum is no longer the selected part's specification, but low-current reliability still needs confirmation from G-Switch or suitable life/environment testing. A rechargeable battery alone does not resolve this question. Do not change to continuous strong pull-ups without evaluating their effect on run time.
 
-The encoder and battery holder share the board center. The holder is rotated 90 degrees to keep its solder tabs away from the module's antenna region. The module sits near the right edge, with a keepout on both layers extending from its antenna toward the circular edge. This reduces PCB area by about 50% compared with the previous 60 mm square. Exact antenna clearance must be confirmed against the selected module's reference design, including the battery, magnets, phone and enclosure.
+## Radio and programming
 
-The proposed supply validation range is 2.0–3.2 V. Do not recharge the CR2032 or feed current into it from a programming fixture. Remove the cell when the fixture powers the board; use VTREF only as a reference during battery-powered debugging.
+The module is placed near the right edge with a keepout on both copper layers extending from its antenna toward the edge. The battery allocation ends before that region. Confirm antenna clearance against the exact module reference design, including the battery, magnets, phone and enclosure.
 
-## Product questions before fabrication
+GPIO assignments remain P0.11 for A, P0.12 for B, P0.13 for push and P0.21 for reset. Test pads expose the regulated supply, ground, SWD, reset, A/B, battery, system supply, USB input and charger status. The fixture must not drive voltage into `VBAT`; avoid contention with USB or battery power when using an externally powered debug fixture.
 
-- **Encoder contact current:** the [ALPS datasheet](https://datasheet.lcsc.com/datasheet/pdf/3358ec822187e9212730cac20f8e02d4.pdf?productCode=C209762) specifies a minimum encoder operating current of 1 mA; the push switch minimum rating is 1 mA at 5 V. The existing 100 kΩ pull-ups at coin-cell voltage provide only about 20–30 µA. Reliable contact operation at that current is unqualified. Resolve the input circuit or obtain manufacturer approval for low-current sensing before treating this as a compatible production selection. Continuous 1 mA pull-ups would conflict with the idle power target.
-- **JLCPCB sourcing:** encoder C209762 and holder C5503436 have catalog codes. Search stock is indicative and must be rechecked when ordering. The exact Raytac module has no verified JLCPCB listing, so the whole BOM is not yet ready for JLCPCB-only assembly; select a stocked module or arrange a supported sourcing option before manufacturing.
-- **Mechanical and RF verification:** check the exact Raytac footprint, locating-peg tolerances, battery insertion and retention, access to programming pads, and RF behavior beside the cell, phone and magnets. An SMD encoder removes electrical leads through the board but does not establish enclosure fit or a thin product.
+The Raytac module still uses a land pattern adapted from [Bishop Fox's MDBT42Q-P512KV2 footprint](https://github.com/BishopFox/mellon/blob/main/Mellon/ul_MDBT42Q-P512KV2/KiCADv6/footprints.pretty/MDBT42Q-P512KV2_RAY.kicad_mod). Pad numbering was checked against the [MDBT42Q-512K KiCad symbol](https://github.com/devbisme/skidl/blob/master/src/skidl/tools/skidl/libs/RF_Module_sklib.py). Its separate [MDBT42Q STEP model](https://github.com/yuhki50/kicad-packages3D/blob/master/Raytac.3dshapes/MDBT42Q.step) is used under [CC BY-SA 4.0](https://github.com/yuhki50/kicad-packages3D/blob/master/LICENSE). Confirm geometry and pin mapping against the exact 512KV2 module. Sourcing this module for JLCPCB-only assembly remains unresolved.
 
-## Firmware and BLE plan
+## Firmware and app proposal
 
-Firmware should decode legal quadrature transitions, wake on GPIO activity, and preserve a signed 32-bit cumulative step total and sequence counter across disconnection. Partial-turn state remains in RAM; a wear-managed flash journal would checkpoint persistent state. Sudden battery removal can lose activity since the last checkpoint.
+- Full-turn mode adds or subtracts one per complete revolution; reversals cancel partial progress. Step mode counts validated detents.
+- A long dial press enters pairing; reset is an explicit app action.
+- Firmware retains a signed cumulative total while disconnected and sends authoritative absolute state after reconnect. Duplicate BLE notifications must not double-count.
+- A wear-managed flash journal checkpoints persistent state; sudden power removal can lose activity since the last checkpoint.
+- The proposed BLE contract includes State (read/notify), Control (write with response), Battery and Device Information services. UUIDs and encoding remain to be defined.
+- Phone-wide overlays and generic media/camera/HID controls are outside V1. Magnetic mounting does not imply Qi2 certification or charging through the phone.
 
-The proposed BLE contract includes a custom State characteristic (read and notify) with protocol version, boot ID, sequence, and cumulative steps; a Control characteristic (write with response) for reset and mode commands; plus Battery and Device Information services. UUIDs and byte encoding still need to be defined. The phone apps should treat State snapshots as authoritative and use boot ID and sequence to identify restarts and duplicate updates.
+Battery-life claims are deferred until the input circuit is qualified and idle, connected, rotation and charging currents are measured. The charger and regulator have low-power battery modes, but closed 100 kΩ input pull-ups still consume approximately 30 µA each at 3 V. Neither the prior coin-cell budget nor a rechargeable run-time claim has been established.
 
-## Power targets
+## Development and verification
 
-These are engineering targets, **not measured battery-life claims**:
-
-| Condition | Target or planning assumption |
-| --- | --- |
-| Idle, disconnected | At most 15 µA average after initial fast advertising |
-| Connected, no movement | At most 50 µA average at the selected connection interval |
-| Slow advertising | Proposed 1–2 second interval |
-| Battery model | 150 mAh usable for planning |
-
-Closed 100 kΩ encoder pull-ups can each draw about 30 µA at 3 V. Rotation, radio traffic, leakage, temperature, and coin-cell impedance must be measured before making a battery-life claim. A six-month claim would require a measured duty-cycle average around 34 µA or less under the proposal's 150 mAh planning assumption.
-
-## Development
-
-This project pins `tscircuit` to `0.0.2711`. The `tsci` CLI also requires Bun. From the repository root:
+The project pins `tscircuit` to `0.0.2711`; the CLI requires Bun.
 
 ```sh
 npm install
-npm run dev        # Open the local circuit preview
-npm run typecheck  # Check TypeScript
-npm run build      # Generate Circuit JSON in dist/
-npx tsci build --pcb-png --3d-png  # Local previews in ignored dist/
+npm run dev
+npm run typecheck
+npx tsci check netlist
+npx tsci check schematic-placement
+npx tsci check placement
+npx tsci build --pcb-png --schematic-png
+npm run check:power
+npx tsci check shorts dist/index/circuit.json
 ```
 
-`npm run typecheck`, `tsci check netlist`, `tsci check schematic-placement`, `tsci check placement`, `npm run build`, and `tsci check shorts` pass for this circular draft. The build autoroutes it. The CLI still reports lint warnings about generic passive footprints, missing courtyards and pin annotations, and a saved-routing-path export warning; Circuit JSON has no PCB errors. Passing these checks does not establish radio performance, battery life, mechanical fit, or manufacturing readiness. Check the exact module footprint and antenna keep-out, reconcile supplier footprints and courtyards, and measure supply behavior on real hardware before fabrication.
+`check:power` verifies built-netlist rail isolation, separate USB-C CC pull-downs, charger mode, the pack sensor connection, unobstructed battery allocation and copper containment inside the circular board. It supplements the CLI checks; it does not prove charger behavior, thermal performance or mechanical fit. Generated previews remain in ignored `dist/`; snapshots and ZIP bundles are excluded from the source package.
 
-The encoder and holder load their imported remote OBJ/STEP models; the Raytac module references its separate STEP model. Preview support for that STEP model can differ between renderers. The default camera views the top of the board; the bottom-mounted holder is underneath. The model does not establish enclosure clearances.
-
-## Proposed acceptance gates
-
-1. **Bench proof:** Decode 100 turns in each direction without mismatch, including reversals and rests.
-2. **App proof:** Show the correct count after 100 offline turns and reconnect; duplicate packets must not double-count.
-3. **PCB and CAD:** Review module pad mapping, footprints, antenna clearances, enclosure fit, and battery access.
-4. **Assembled prototype:** Verify SWD, operation across 2.0–3.2 V, and BLE performance mounted on real phones.
-5. **Product decision:** Measure power, mount retention, dial feel, and thickness before deciding whether to develop the thin ring.
-
-The thin rotating-ring design is a later revision. Its sensing method and magnetic geometry have not been selected.
+CLI lint warnings remain for generic passive footprints, missing pin annotations/courtyards and saved-route export. Review the selected footprints, charger layout and thermal grounding before fabrication. The exact battery, low-current input qualification, radio sourcing, RF performance and enclosure fit are remaining product gates.
