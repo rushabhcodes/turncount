@@ -75,6 +75,15 @@ export default () => (
         <capacitor name={`C${i + 3}`} capacitance="1nF" footprint="0402" schSectionName="inputs" schX={9} schY={-13 - i * 2} schRotation={-90} pcbX={-15.5 + i * 3} pcbY={-13} pcbRotation={180} />
       </Fragment>
     ))}
+    {/* Route local common rails outside the signal lands of each passive. */}
+    {[0, 1].map((i) => (
+      <Fragment key={`input-bus-${i}`}>
+        <trace name={`input_supply_bus_${i}`} from={`R${i + 4}.pin1`} to={`R${i + 5}.pin1`}
+          thickness="0.15mm" pcbPath={[{x:-0.5,y:0.8},{x:2.5,y:0.8}]} />
+        <trace name={`input_ground_bus_${i}`} from={`C${i + 3}.pin2`} to={`C${i + 4}.pin2`}
+          thickness="0.15mm" pcbPath={[{x:0.5,y:1},{x:-2.5,y:1}]} />
+      </Fragment>
+    ))}
     <resistor name="R7" resistance="100k" footprint="0402" schSectionName="radio" schX={30} schY={2} schRotation={-90} pcbX={10.5} pcbY={0.5} />
     {[[5, -11], [7, -11], [9, -11], [5, -13], [7, -13], [9, -15.5], [11, -13]].map(([x, y], i) => (
       <Fragment key={`testpoint-${i}`}>
