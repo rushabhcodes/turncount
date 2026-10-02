@@ -56,7 +56,7 @@ export const RechargeablePower = () => (
       pcbX={-4} pcbY={14} pcbRotation={180} />
 
     <resistor name="R8" resistance="5.1k" footprint="0402"
-      schSectionName="power" schX={-50} schY={-12} schRotation={-90} pcbX={-6.5} pcbY={-14} />
+      schSectionName="power" schX={-50} schY={-12} schRotation={-90} pcbX={-6.5} pcbY={-14} pcbRotation={180} />
     <resistor name="R9" resistance="5.1k" footprint="0402"
       schSectionName="power" schX={-46} schY={-12} schRotation={-90} pcbX={1} pcbY={-12} />
     <resistor name="R10" resistance="8.66k" footprint="0402"
