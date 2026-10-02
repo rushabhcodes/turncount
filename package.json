@@ -1,6 +1,6 @@
 {
   "name": "@tsci/rushabhcodes.turncount",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A tscircuit component package",
   "main": "index.circuit.tsx",
   "keywords": [
@@ -16,7 +16,8 @@
     "snapshot:update": "tsci snapshot --update",
     "start": "tsci dev",
     "typecheck": "tsc --noEmit",
-    "check:power": "node scripts/check-power.mjs"
+    "check:power": "node scripts/check-power.mjs",
+    "check:fabrication": "node scripts/check-fabrication.mjs"
   },
   "devDependencies": {
     "tscircuit": "0.0.2711",

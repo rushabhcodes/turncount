@@ -66,15 +66,15 @@ for (const entry of byType("pcb_smtpad")) {
   else if (entry.shape === "polygon") extent = Math.max(...entry.points.map(({ x, y }) => Math.hypot(x, y)))
   else extent = Math.max(...[-1, 1].flatMap((dx) => [-1, 1].map((dy) =>
     Math.hypot(entry.x + dx * entry.width / 2, entry.y + dy * entry.height / 2))))
-  assert.ok(extent < 23.99, `Pad ${entry.pcb_smtpad_id} crosses the 48 mm circular edge`)
+  assert.ok(extent < 23.79, `Pad ${entry.pcb_smtpad_id} violates the 0.2 mm circular edge margin`)
 }
 for (const entry of byType("pcb_via")) {
-  assert.ok(Math.hypot(entry.x, entry.y) + entry.outer_diameter / 2 < 23.99, "Via crosses circular edge")
+  assert.ok(Math.hypot(entry.x, entry.y) + entry.outer_diameter / 2 < 23.79, "Via violates circular edge margin")
 }
 for (const entry of byType("pcb_trace")) {
   for (const point of entry.route) {
     if (point.x === undefined || point.y === undefined) continue
-    assert.ok(Math.hypot(point.x, point.y) + (point.width ?? 0.2) / 2 < 23.99, "Trace crosses circular edge")
+    assert.ok(Math.hypot(point.x, point.y) + (point.width ?? 0.2) / 2 < 23.79, "Trace violates circular edge margin")
   }
 }
 assert.equal(circuit.filter((entry) => entry.type.endsWith("_error")).length, 0, "Circuit JSON has errors")
