@@ -3,7 +3,8 @@ import { ANNA_B112_00B } from "../imports/ANNA_B112_00B"
 
 // u-blox UBX-18009821 R11, Appendix B, Figures 29 and 30.
 // Reference origin is the lower-left of the 6.5 mm module in Figure 29.
-const referencePoint = (x: number, y: number) => ({ x: 19.05 - x, y: 3.25 - y })
+// Numeric pcbPath points use the first port’s local frame (module rotation included).
+const referencePoint = (x: number, y: number) => ({ x: y - 0.410026, y: 1.060012 - x })
 const groundPins = ["GND3", "GND2", "GND1", "GND5", "GND4", "GND7",
   "GND6", "GND10", "GND9", "GND12", "GND8", "GND14", "GND13",
   "GND11", "EGP1", "EGP2", "EGP4", "EGP3", "XL1", "XL2", "ANT_GND2"]

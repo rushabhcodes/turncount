@@ -75,7 +75,8 @@ export default () => (
     ))}
     {traces.map(([from, to], i) => (
       <Fragment key={`trace-${i}`}>
-        <trace name={`signal_${i}`} from={from} to={to} />
+        <trace name={`signal_${i}`} from={from} to={to}
+          thickness={to === "U1.SWDIO" ? "0.1mm" : undefined} />
       </Fragment>
     ))}
   </board>

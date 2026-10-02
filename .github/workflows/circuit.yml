@@ -23,7 +23,7 @@ jobs:
         run: |
           rm imports/ANNA_B112_00B.tsx
           npx tsci import C2931350 --jlcpcb --use-exact-footprint
-          cat imports/ANNA_B112_00B.tsx
+          diff -u <(git show HEAD:imports/ANNA_B112_00B.tsx) imports/ANNA_B112_00B.tsx
       - run: npm run typecheck
       - run: npx tsci check netlist
       - run: npx tsci check schematic-placement
@@ -42,7 +42,7 @@ jobs:
         if: always()
         run: |
           if [ -f dist/index/circuit.json ]; then
-            node -e 'const c=require("./dist/index/circuit.json"); console.log(JSON.stringify(c.filter(e=>e.type.endsWith("_error")),null,2))'
+            node -e 'const c=require("./dist/index/circuit.json"); const u=c.find(e=>e.type==="source_component"&&e.name==="U1"); const ports=c.filter(e=>e.type==="source_port"&&e.source_component_id===u.source_component_id); console.log(JSON.stringify({errors:c.filter(e=>e.type.endsWith("_error")),radio:u,ports,rf:c.filter(e=>e.type==="pcb_trace"&&["pcb_trace_0","pcb_trace_1"].includes(e.pcb_trace_id))},null,2))'
           fi
       - uses: actions/upload-artifact@v4
         if: always()
