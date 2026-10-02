@@ -2,7 +2,7 @@
 
 TurnCount is a proposed battery-powered rotary counter that mounts magnetically to a phone. Turning the puck updates a signed count in a companion iOS or Android app over Bluetooth Low Energy (BLE). The puck has no display or charging port; it uses a replaceable CR2032 coin cell.
 
-**Project status:** This repository is a tscircuit starter project. [`index.circuit.tsx`](index.circuit.tsx) currently contains an empty board. The hardware, firmware, enclosure, and phone apps described below are proposed work, not completed features.
+**Project status:** [`index.circuit.tsx`](index.circuit.tsx) now contains a first electrical PCB draft. It is a 60 mm square placement prototype with the chosen module, encoder, coin cell holder, input filters, decoupling, and test pads. The target circular board, firmware, enclosure, and phone apps remain proposed work.
 
 This README summarizes the *TurnCount product proposal*, team review version 1, dated 1 October 2026.
 
@@ -33,7 +33,9 @@ The selected encoder has 24 pulses and 24 detents per revolution. The proposed f
 
 ## Hardware design notes
 
-The module runs directly from the coin cell. The proposed board includes local supply decoupling and reservoir capacitors, filtered encoder A/B and push inputs, and exposed SWD, supply, and input test pads. Proposed GPIO assignments are P0.11 for A, P0.12 for B, P0.13 for push, and P0.21 for reset. These are logical assignments **pending verification against the module's exact pad mapping and reference circuit**.
+The module runs directly from the coin cell. The draft board includes 100 nF and 10 µF supply capacitors; 1 kΩ series resistors, 100 kΩ pull-ups, and 1 nF capacitors on encoder A/B and push; plus exposed SWD, supply, reset, and A/B test pads. GPIO assignments are P0.11 for A, P0.12 for B, P0.13 for push, and P0.21 for reset. Module pad numbers were checked against the [MDBT42Q-512K KiCad symbol](https://github.com/devbisme/skidl/blob/master/src/skidl/tools/skidl/libs/RF_Module_sklib.py); confirm them against the exact Raytac variant and reference circuit before fabrication.
+
+The encoder land pattern was transcribed from [ElectronicCats' PEC11R-4215F-S0024 footprint](https://github.com/ElectronicCats/SamyKamTools/blob/master/Schematic/Libs/SW_PEC11R-4215F-S0024.kicad_mod). The module land pattern was adapted from [Bishop Fox's MDBT42Q-P512KV2 footprint](https://github.com/BishopFox/mellon/blob/main/Mellon/ul_MDBT42Q-P512KV2/KiCADv6/footprints.pretty/MDBT42Q-P512KV2_RAY.kicad_mod); verify the P variant's pad geometry against the selected 512KV2 module. The holder uses KiCad's `BatteryHolder_Keystone_3002_1x2032` footprint. Its bottom placement avoids the encoder's through-hole pins on this 60 mm draft, but physical body and enclosure clearances have not been checked.
 
 Place the encoder at the mechanical center, the module near the board edge with its antenna facing outward, and the battery holder on the bottom where it clears encoder pins. The module's antenna keep-out must be respected on both PCB layers and by the battery, magnets, and enclosure. The 40 mm board target depends on a 3D interference check and is not yet a confirmed fit.
 
@@ -60,16 +62,19 @@ Closed 100 kΩ encoder pull-ups can each draw about 30 µA at 3 V. Rotation, rad
 
 ## Development
 
-This project pins `tscircuit` to `0.0.2711`. From the repository root:
+This project pins `tscircuit` to `0.0.2711`. The `tsci` CLI also requires Bun. From the repository root:
 
 ```sh
 npm install
 npm run dev        # Open the local circuit preview
 npm run typecheck  # Check TypeScript
 npm run build      # Generate Circuit JSON in dist/
+npx tsci snapshot --3d  # Save PCB, schematic, and 3D snapshots
 ```
 
-The current build validates only the empty starter board. It does not validate the proposed electrical design or produce manufacturing-ready files.
+`npm run typecheck`, `tsci check netlist`, `tsci check schematic-placement`, `tsci check placement`, `npm run build`, and `tsci check shorts` pass for the first draft. The build autoroutes it, but it does not establish radio performance, battery life, mechanical fit, or manufacturing readiness. Check the exact module footprint and antenna keep-out, reconcile supplier footprints and courtyards, and measure supply behavior on real hardware before fabrication.
+
+The 3D snapshot is partial: the KiCad battery holder STEP model URL currently returns 404, so its body is absent from that view.
 
 ## Proposed acceptance gates
 
