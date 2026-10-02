@@ -42,7 +42,7 @@ export default () => (
     minPlatedHoleDrillEdgeToDrillEdgeClearance="0.45mm"
     minTraceWidth="0.1mm" nominalTraceWidth="0.15mm"
     minTraceToHoleEdgeClearance="0.28mm" minBoardEdgeClearance="0.2mm"
-    pcbStyle={{ silkscreenFontSize: "0.8mm" }}>
+    pcbStyle={{ silkscreenFontSize: "0.8mm", viaHoleDiameter: "0.3mm", viaPadDiameter: "0.6mm" }}>
     <schematicsection name="power" displayName="USB-C charging and 3 V supply" />
     <schematicsection name="inputs" displayName="Rotary encoder inputs" />
     <schematicsection name="radio" displayName="BLE and programming" />
@@ -91,12 +91,20 @@ export default () => (
             radioPathPoint(15.748057, -1.1),
             radioPathPoint(15.748057, -2.515),
             radioPathPoint(16.073162, -2.515),
+            radioPathPoint(16.073162, -3.75),
             {...radioPathPoint(16.073162, -3.75), via: true, fromLayer: "top", toLayer: "bottom"},
+            radioPathPoint(16.073162, -3.75),
+            radioPathPoint(5, -11.9),
             {...radioPathPoint(5, -11.9), via: true, fromLayer: "bottom", toLayer: "top"},
+            radioPathPoint(5, -11.9),
           ] : from === "U1.SWDCLK" ? [
             radioPathPoint(16.723163, -1.299972),
+            radioPathPoint(16.723163, -4.5),
             {...radioPathPoint(16.723163, -4.5), via: true, fromLayer: "top", toLayer: "bottom"},
+            radioPathPoint(16.723163, -4.5),
+            radioPathPoint(9, -10),
             {...radioPathPoint(9, -10), via: true, fromLayer: "bottom", toLayer: "top"},
+            radioPathPoint(9, -10),
           ] : undefined} />
       </Fragment>
     ))}
