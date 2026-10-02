@@ -55,7 +55,7 @@ radio_lands = unary_union([
     for e in circuit if e["type"] == "pcb_smtpad" and e["pcb_component_id"] == radio_pcb["pcb_component_id"]
 ])
 rf_voids = {
-    "top": [box(18.165, 0.15, 22.535, 3.95), box(17.412, -3.25, 17.815, 3.95)],
+    "top": [box(18.165, 0.15, 22.535, 3.95), box(17.41197, -3.25, 17.81497, 3.95)],
     "bottom": [box(17.551, 0.15, 22.535, 4.8)],
 }
 outboard_void = box(12.55, 4.3, 24.5, 24.5)

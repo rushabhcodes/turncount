@@ -134,19 +134,21 @@ export const AnnaRadio = () => (
     {unusedPads.map(({pin, x, y}) => (
       <Fragment key={pin}>
         <keepout shape="rect" pcbX={x} pcbY={y} width="0.55mm" height="0.55mm"
-          layers={["top"]} allowPlacements={true} allowTraces={false} />
+          layers={["top"]} excludeRefs={[".U1"]} />
       </Fragment>
     ))}
+    {/* Align the 0.403 mm gap with the imported pad coordinate, including its
+        0.000012 mm conversion offset, so it stays clear of the 0.35 mm strip. */}
     {/* Reference antenna voids, plus clearance extended to the circular edge.
         Only the imported module's own lands are exempt. */}
     <keepout shape="rect" pcbX={20.35} pcbY={2.05}
-      width="4.37mm" height="3.8mm" layers={["top"]} allowPlacements={true} allowTraces={false} />
-    <keepout shape="rect" pcbX={17.6135} pcbY={0.35}
-      width="0.403mm" height="7.2mm" layers={["top"]} allowPlacements={true} allowTraces={false} />
+      width="4.37mm" height="3.8mm" layers={["top"]} excludeRefs={[".U1"]} />
+    <keepout shape="rect" pcbX={17.61347} pcbY={0.35}
+      width="0.403mm" height="7.2mm" layers={["top"]} excludeRefs={[".U1"]} />
     <keepout shape="rect" pcbX={20.043} pcbY={2.475}
-      width="4.984mm" height="4.65mm" layers={["bottom"]} allowPlacements={true} allowTraces={false} />
+      width="4.984mm" height="4.65mm" layers={["bottom"]} excludeRefs={[".U1"]} />
     <keepout shape="rect" pcbX={18.525} pcbY={14.4}
-      width="11.95mm" height="20.2mm" layers={["top", "bottom"]} allowPlacements={true} allowTraces={false} />
+      width="11.95mm" height="20.2mm" layers={["top", "bottom"]} excludeRefs={[".U1"]} />
     {[3.55, 2.75, 1.95, 1.15, 0.35, -0.45].map((y, i) => (
       <Fragment key={i}>
         <via name={`RADIO_GND_${i}`} pcbX={22.935} pcbY={y}
