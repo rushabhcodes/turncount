@@ -1,5 +1,8 @@
 import type { ChipProps } from "@tscircuit/props"
 
+// Keep the imported retainer and remote CAD model. Offset the PCB's
+// negative contact land within the CR2032 negative face to clear the
+// centered encoder's locating holes on this two-sided assembly.
 const pinLabels = {
   pin1: ["BAT_POS"],
   pin2: ["BAT_NEG"],
@@ -30,7 +33,7 @@ export const A_3002 = (props: ChipProps<typeof pinLabels>) => {
       footprint={<footprint>
         <smtpad portHints={["pin1"]} pcbX="-12.999974mm" pcbY="0mm" width="6.499987mm" height="6.999986mm" shape="rect" />
 <smtpad portHints={["pin3"]} pcbX="12.999974mm" pcbY="0mm" width="6.499987mm" height="6.999986mm" shape="rect" />
-<smtpad portHints={["pin2"]} pcbX="-0mm" pcbY="0mm" radius="4.99999mm" shape="circle" />
+<smtpad portHints={["pin2"]} pcbX={0} pcbY={4} radius={2.5} shape="circle" />
 <silkscreenpath route={[{"x":10.437012399999958,"y":-3.731133000000227},{"x":10.437012399999958,"y":-4.381119000000012}]} />
 <silkscreenpath route={[{"x":10.437012399999958,"y":5.7954163999997945},{"x":10.437012399999958,"y":3.731133}]} />
 <silkscreenpath route={[{"x":-10.541000000000054,"y":3.731133},{"x":-10.541000000000054,"y":5.700013999999896}]} />

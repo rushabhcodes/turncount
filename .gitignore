@@ -5,6 +5,10 @@ node_modules/
 dist/
 build/
 
+# Generated review images and download bundles
+/__snapshots__/
+/turncount-snapshots.zip
+
 # Environment variables
 .env
 .env.local
