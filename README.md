@@ -2,7 +2,7 @@
 
 TurnCount is a proposed rechargeable rotary counter that mounts magnetically to a phone. Turning the dial updates a signed count in a companion iOS or Android app over Bluetooth Low Energy (BLE).
 
-**Status:** the repository implements a 48 mm circular, two-layer PCB prototype with USB-C charging, a regulated radio supply, and a low-profile SMD encoder. A bottom-side space allocation is provided for an external LiPo pack beneath the encoder. The exact battery SKU, knob, enclosure, firmware and apps are not yet implemented. This is a design review prototype, not a fabrication release.
+**Status:** the repository implements a 48 mm circular, two-layer PCB prototype with USB-C charging, a regulated radio supply, and a low-profile SMD encoder. A bottom-side space allocation is provided for an external LiPo pack beneath the encoder. The exact battery SKU, knob, enclosure, firmware and apps are not yet implemented. PCB routing and manufacturing checks now pass for a prototype build. Battery, encoder, RF, assembly and firmware qualification remain open.
 
 See [the fabrication review](FABRICATION_REVIEW.md) for verified geometry, native tscircuit fixes and the remaining assembly and product qualification gates.
 

@@ -38,6 +38,11 @@ jobs:
           npx tsci export dist/index/circuit.json -f gerbers -o "$RUNNER_TEMP/fab.zip"
           python -m zipfile -e "$RUNNER_TEMP/fab.zip" "$RUNNER_TEMP/fab"
           python scripts/check-gerbers.py "$RUNNER_TEMP/fab" dist/index/circuit.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: manufacturing-review
+          path: ${{ runner.temp }}/fab/
+          if-no-files-found: error
       - name: Preserve diagnostic circuit JSON
         if: always()
         run: |

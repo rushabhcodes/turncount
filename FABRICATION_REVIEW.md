@@ -1,6 +1,8 @@
 # TurnCount fabrication review
 
-Status: **replacement layout under validation; not released for fabrication**.
+Status: **PCB routing and manufacturing checks pass for a prototype build**.
+Battery, encoder, RF, assembly and firmware qualification remain open; this is
+not a validated production product.
 Target: JLCPCB, 48 mm circular PCB, two layers, 1.6 mm FR4, 1 oz copper.
 
 ## Replacement
@@ -30,7 +32,28 @@ GitHub Actions runs TypeScript, netlist, schematic placement, PCB placement,
 routed build, power/pin-map guards, assembly geometry/stencil guards, native
 shorts checks and an independent exported-Gerber connectivity/clearance check.
 Results for the previous Raytac revision are superseded by this layout.
-Replacement results are pending; see the PR's Circuit verification workflow.
+[Verification run 11](https://github.com/rushabhcodes/turncount/actions/runs/36966574006)
+passed on circuit commit `62c80a365b7dd002fcbdcaae9b1e2d1fb4debd70`.
+
+| Check | Result |
+| --- | --- |
+| Fresh TSCI import compared with committed file | Exact match, without download flag |
+| TypeScript, netlist, schematic/PCB placement and routed build | Pass; no Circuit JSON errors |
+| Radio pin map, rail isolation, USB and battery allocation guards | Pass |
+| JLCPCB populated-part, via, stencil and no-drill-in-SMT-land guards | Pass |
+| Native shorts check | Pass |
+| Independent Gerber physical connectivity | 22 nets; zero opens and zero shorts |
+| Minimum separate-conductor gap | 0.0999 mm, nominal 0.10 mm with import/export rounding; CAM review required |
+| Copper-to-outline clearance | 0.3000 mm on both layers |
+| Minimum NPTH-to-copper clearance | Top 0.2387 mm; bottom 0.2772 mm |
+| Vias | 73; 0.30/0.60 mm drill/pad; minimum drill-edge gap 0.203 mm |
+| Via tenting, antenna copper exclusions, bare probe stencil | Pass |
+
+The native Gerber export also includes `bom.csv` and `pick_and_place.csv`.
+Completed verification runs retain these files in the **manufacturing-review**
+Actions artifact. This is a review bundle; confirm assembler orientation and
+CAM acceptance before ordering. Generated bundles and snapshots are not
+committed or published with the source package.
 
 ## Release gates
 
