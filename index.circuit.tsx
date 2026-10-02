@@ -1,31 +1,9 @@
-// First electrical draft for TurnCount V1. Pad numbers for the Raytac module
-// follow the MDBT42Q-512K KiCad symbol; enclosure fit still needs verification.
-// Module land pattern: BishopFox/mellon, MDBT42Q-P512KV2_RAY.kicad_mod.
-// Encoder, USB, charger, regulator and pack connector: exact JLCPCB imports.
-// The module STEP model is from yuhki50/kicad-packages3D (CC BY-SA 4.0).
 import { Fragment } from "react"
+import { AnnaRadio, radioPathPoint } from "./components/AnnaRadio"
 import { RechargeablePower } from "./components/RechargeablePower"
+import { ProbePad } from "./components/ProbePad"
 import { GT_EVA01AA_L1 } from "./imports/GT_EVA01AA_L1"
-import moduleStep from "./models/MDBT42Q.step"
 
-const modulePads: [number, number, number, number, number][] = [
-  [1, -4.6, 3.801, 1.397, 0.813],
-  ...Array.from({ length: 10 }, (_, i): [number, number, number, number, number] => [i + 2, -4.6, 0.801 - i * 0.7, 1.397, 0.406]),
-  ...Array.from({ length: 13 }, (_, i): [number, number, number, number, number] => [i + 12, -4.2 + i * 0.7, -7.6, 0.406, 1.397]),
-  ...Array.from({ length: 15 }, (_, i): [number, number, number, number, number] => [i + 25, 4.6, i === 14 ? 3.801 : -6.199 + i * 0.7, 1.397, i === 14 ? 0.813 : 0.406]),
-  [40, 2.9, 3.251, 0.991, 0.406],
-  [41, 2.9, 1.851, 0.991, 0.406],
-]
-
-const moduleFootprint = (
-  <footprint>
-    {modulePads.map(([pin, x, y, width, height]) => (
-      <Fragment key={pin}>
-        <smtpad portHints={[String(pin)]} pcbX={x} pcbY={y} width={width} height={height} shape="rect" />
-      </Fragment>
-    ))}
-  </footprint>
-)
 // The imported locating holes sit 1.4 mm below the shaft axis in the drawing.
 // Shift the imported anchor so the mechanical shaft axis remains at (0, 0).
 const encoderFootprintOffsetY = -1.072594
@@ -36,8 +14,6 @@ const boardOutline = Array.from({ length: 180 }, (_, i) => {
   return { x: boardDiameter / 2 * Math.cos(angle), y: boardDiameter / 2 * Math.sin(angle) }
 })
 const traces: [string, string][] = [
-  ["U1.VDD", "net.V3V0"],
-  ...["GND1", "GND12", "GND24", "GND39"].map((pin): [string, string] => [`U1.${pin}`, "net.GND"]),
   ...["C1", "C2"].flatMap((ref): [string, string][] => [[`${ref}.pin1`, "net.V3V0"], [`${ref}.pin2`, "net.GND"]]),
   ["ENC1.COM", "net.GND"], ["ENC1.D", "net.GND"],
   ["ENC1.pin1", "net.GND"], ["ENC1.pin2", "net.GND"],
@@ -48,42 +24,50 @@ const traces: [string, string][] = [
     [`R${i + 4}.pin2`, `net.ENC_${signal}`],
     [`C${i + 3}.pin1`, `net.ENC_${signal}`],
     [`C${i + 3}.pin2`, "net.GND"],
-    [`U1.P0_${11 + i}`, `net.ENC_${signal}`],
+    [`U1.GPIO_${13 + i}`, `net.ENC_${signal}`],
   ]),
-  ["R7.pin1", "net.V3V0"], ["R7.pin2", "U1.RESET"],
+  ["R7.pin1", "net.V3V0"], ["R7.pin2", "U1.RESET_N"],
   ["TP1.pin1", "net.V3V0"], ["TP2.pin1", "net.GND"],
-  ["TP3.pin1", "U1.SWDCLK"], ["TP4.pin1", "U1.SWDIO"],
-  ["TP5.pin1", "U1.RESET"], ["TP6.pin1", "net.ENC_A"],
+  ["U1.SWDCLK", "TP3.pin1"], ["U1.SWDIO", "TP4.pin1"],
+  ["TP5.pin1", "U1.RESET_N"], ["TP6.pin1", "net.ENC_A"],
   ["TP7.pin1", "net.ENC_B"],
 ]
 
 export default () => (
   <board title="TurnCount — USB-C rechargeable prototype"
     width={boardDiameter} height={boardDiameter} outline={boardOutline}
-    layers={2} thickness="1.6mm" defaultViaTenting="both_sides">
+    layers={2} thickness="1.6mm" defaultViaTenting="both_sides"
+    minViaHoleDiameter="0.3mm" minViaPadDiameter="0.6mm"
+    minViaHoleEdgeToViaHoleEdgeClearance="0.2mm"
+    minPlatedHoleDrillEdgeToDrillEdgeClearance="0.45mm"
+    minTraceWidth="0.1mm" nominalTraceWidth="0.15mm"
+    minTraceToHoleEdgeClearance="0.28mm" minBoardEdgeClearance="0.2mm"
+    pcbStyle={{ silkscreenFontSize: "0.8mm", viaHoleDiameter: "0.3mm", viaPadDiameter: "0.6mm" }}>
     <schematicsection name="power" displayName="USB-C charging and 3 V supply" />
     <schematicsection name="inputs" displayName="Rotary encoder inputs" />
     <schematicsection name="radio" displayName="BLE and programming" />
 
-    <chip name="U1" manufacturerPartNumber="MDBT42Q-512KV2"
-      footprint={moduleFootprint}
-      cadModel={{
-        stepUrl: moduleStep,
-        modelBoardNormalDirection: "y+",
-      }}
-      pinLabels={{ pin1: "GND1", pin11: "VDD", pin12: "GND12", pin24: "GND24",
-        pin25: "P0_11", pin26: "P0_12", pin27: "P0_13", pin35: "RESET",
-        pin36: "SWDCLK", pin37: "SWDIO", pin39: "GND39" }}
-      pinAttributes={{ VDD: { requiresPower: true }, SWDCLK: { mustBeConnected: true }, SWDIO: { mustBeConnected: true } }}
-      schSectionName="radio" schX={20} schY={0} pcbX={16.5} pcbY={0} />
-    <keepout shape="rect" pcbX={17} pcbY={14.25}
-      width="11mm" height="19.5mm" layers={["top", "bottom"]} />
+    <AnnaRadio />
+    <copperpour name="GND_TOP" connectsTo="net.GND" layer="top"
+      clearance="0.2mm" boardEdgeMargin="0.3mm" cutoutMargin="0.28mm" useThermalReliefs={false} />
+    <copperpour name="GND_BOTTOM" connectsTo="net.GND" layer="bottom"
+      clearance="0.2mm" boardEdgeMargin="0.3mm" cutoutMargin="0.28mm" useThermalReliefs={false} />
     <RechargeablePower />
     <GT_EVA01AA_L1 name="ENC1"
       schSectionName="inputs" schX={0} schY={-15} pcbX={0} pcbY={encoderFootprintOffsetY} />
+    {/* Keep the push-signal layer change outside the encoder's solder land. */}
+    {[-1.499997, 1.499997].map((x) => (
+      <Fragment key={x}>
+        <keepout shape="circle" pcbX={x} pcbY={-1.4} radius="0.58mm"
+          layers={["top", "bottom"]} excludeRefs={[".ENC1"]} />
+      </Fragment>
+    ))}
+    <tracehint for=".ENC1 port.pin3" offset={{ x: -1.5, y: -5.5, via: true, to_layer: "bottom" }} />
+    <tracehint for=".ENC1 port.pin5" offset={{ x: 1.5, y: -5.5, via: true, to_layer: "bottom" }} />
+    <tracehint for=".ENC1 port.pin6" offset={{ x: -0.75, y: -4.5, via: true, to_layer: "bottom" }} />
 
-    <capacitor name="C1" capacitance="100nF" footprint="0402" schSectionName="power" schX={-16} schY={2} schRotation={-90} pcbX={11.5} pcbY={-9} />
-    <capacitor name="C2" capacitance="10uF" footprint="0805" schSectionName="power" schX={-16} schY={-2} schRotation={-90} pcbX={14} pcbY={-10.5} />
+    <capacitor name="C1" capacitance="100nF" footprint="0402" schSectionName="power" schX={-16} schY={2} schRotation={-90} pcbX={10.5} pcbY={3} pcbRotation={180} />
+    <capacitor name="C2" capacitance="10uF" footprint="0805" schSectionName="power" schX={-16} schY={-2} schRotation={-90} pcbX={10.5} pcbY={5.5} pcbRotation={180} />
     {signalNames.map((signal, i) => (
       <Fragment key={signal}>
         <resistor name={`R${i + 1}`} resistance="1k" footprint="0402" schSectionName="inputs" schX={3} schY={-13 - i * 2} pcbX={-15.5 + i * 3} pcbY={-9} />
@@ -91,15 +75,46 @@ export default () => (
         <capacitor name={`C${i + 3}`} capacitance="1nF" footprint="0402" schSectionName="inputs" schX={9} schY={-13 - i * 2} schRotation={-90} pcbX={-15.5 + i * 3} pcbY={-13} pcbRotation={180} />
       </Fragment>
     ))}
-    <resistor name="R7" resistance="100k" footprint="0402" schSectionName="radio" schX={24} schY={2} schRotation={-90} pcbX={17.5} pcbY={-10.5} />
-    {[[5, -11], [7, -11], [9, -11], [5, -13], [7, -13], [9, -13], [11, -13]].map(([x, y], i) => (
+    {/* Route local common rails outside the signal lands of each passive. */}
+    {[0, 1].map((i) => (
+      <Fragment key={`input-bus-${i}`}>
+        <trace name={`input_supply_bus_${i}`} from={`R${i + 4}.pin1`} to={`R${i + 5}.pin1`}
+          thickness="0.15mm" pcbPath={[{x:-0.5,y:0.8},{x:2.5,y:0.8}]} />
+        <trace name={`input_ground_bus_${i}`} from={`C${i + 3}.pin2`} to={`C${i + 4}.pin2`}
+          thickness="0.15mm" pcbPath={[{x:0.5,y:1},{x:-2.5,y:1}]} />
+      </Fragment>
+    ))}
+    <resistor name="R7" resistance="100k" footprint="0402" schSectionName="radio" schX={30} schY={2} schRotation={-90} pcbX={10.5} pcbY={0.5} />
+    {[[5, -11], [7, -11], [9, -11], [5, -13], [7, -13], [9, -15.5], [11, -13]].map(([x, y], i) => (
       <Fragment key={`testpoint-${i}`}>
-        <testpoint name={`TP${i + 1}`} footprintVariant="pad" padDiameter="1mm" schSectionName="radio" schX={24} schY={-2 - i * 2} pcbX={x} pcbY={y} />
+        <ProbePad name={`TP${i + 1}`} schSectionName="radio" schX={30} schY={-2 - i * 2} pcbX={x} pcbY={y} />
       </Fragment>
     ))}
     {traces.map(([from, to], i) => (
       <Fragment key={`trace-${i}`}>
-        <trace from={from} to={to} />
+        <trace name={`signal_${i}`} from={from} to={to}
+          thickness={from === "U1.SWDIO" || from === "U1.SWDCLK" ? "0.1mm" : undefined}
+          pcbPath={from === "U1.SWDIO" ? [
+            radioPathPoint(15.92, -0.649859),
+            radioPathPoint(15.92, -1.1),
+            radioPathPoint(15.748057, -1.1),
+            radioPathPoint(15.748057, -2.515),
+            radioPathPoint(16.073162, -2.515),
+            radioPathPoint(16.073162, -3.75),
+            {...radioPathPoint(16.073162, -3.75), via: true, fromLayer: "top", toLayer: "bottom"},
+            radioPathPoint(16.073162, -3.75),
+            radioPathPoint(5, -11.9),
+            {...radioPathPoint(5, -11.9), via: true, fromLayer: "bottom", toLayer: "top"},
+            radioPathPoint(5, -11.9),
+          ] : from === "U1.SWDCLK" ? [
+            radioPathPoint(16.723163, -1.299972),
+            radioPathPoint(16.723163, -4.5),
+            {...radioPathPoint(16.723163, -4.5), via: true, fromLayer: "top", toLayer: "bottom"},
+            radioPathPoint(16.723163, -4.5),
+            radioPathPoint(9, -10),
+            {...radioPathPoint(9, -10), via: true, fromLayer: "bottom", toLayer: "top"},
+            radioPathPoint(9, -10),
+          ] : undefined} />
       </Fragment>
     ))}
   </board>

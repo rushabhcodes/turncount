@@ -2,7 +2,9 @@
 
 TurnCount is a proposed rechargeable rotary counter that mounts magnetically to a phone. Turning the dial updates a signed count in a companion iOS or Android app over Bluetooth Low Energy (BLE).
 
-**Status:** the repository implements a 48 mm circular, two-layer PCB prototype with USB-C charging, a regulated radio supply, and a low-profile SMD encoder. A bottom-side space allocation is provided for an external LiPo pack beneath the encoder. The exact battery SKU, knob, enclosure, firmware and apps are not yet implemented. This is a design review prototype, not a fabrication release.
+**Status:** the repository implements a 48 mm circular, two-layer PCB prototype with USB-C charging, a regulated radio supply, and a low-profile SMD encoder. A bottom-side space allocation is provided for an external LiPo pack beneath the encoder. The exact battery SKU, knob, enclosure, firmware and apps are not yet implemented. PCB routing and manufacturing checks now pass for a prototype build. Battery, encoder, RF, assembly and firmware qualification remain open.
+
+See [the fabrication review](FABRICATION_REVIEW.md) for verified geometry, native tscircuit fixes and the remaining assembly and product qualification gates.
 
 ## Selected components
 
@@ -15,11 +17,13 @@ TurnCount is a proposed rechargeable rotary counter that mounts magnetically to 
 | Three-position pack/NTC connector | [JST S3B-PH-SM4-TB(LF)(SN)](https://www.lcsc.com/product-detail/C265101.html) | C265101 |
 | Charger input bypass, 1 µF / 50 V | Samsung CL10A105KB8NNNC | C15849 |
 | Battery, system and regulator bypass, 10 µF / 25 V | Samsung CL21A106KAYNNNE | C15850 |
-| Bluetooth module | Raytac MDBT42Q-512KV2 (nRF52832) | No verified JLCPCB listing yet |
+| Bluetooth module | [u-blox ANNA-B112-00B](https://jlcpcb.com/partdetail/ANNA_B112_00B/C2931350) (nRF52832) | C2931350 |
 
-Stock is indicative and must be checked when ordering. The encoder, USB-C receptacle, charger, regulator and pack connector were generated using `tsci import <code> --jlcpcb --use-exact-footprint`, **without `--download`**. Their remote OBJ/STEP model references come from the selected JLCPCB/EasyEDA entries. No substitute encoder model, custom knob or battery model has been added.
+Stock is indicative and must be checked when ordering. The radio, encoder, USB-C receptacle, charger, regulator and pack connector were generated using `tsci import <code> --jlcpcb --use-exact-footprint`, **without `--download`**. Their remote OBJ/STEP model references come from the selected JLCPCB/EasyEDA entries. No substitute encoder model, custom knob or battery model has been added.
 
 The imported pack connector's two mechanical solder tabs are represented as separate ground pads; the three electrical contacts are unchanged. Its aliases identify the intended harness wiring, not a universal battery connector pinout.
+
+Native source adjustments retain the selected imported components and their linked models: the charger uses equivalent rounded rectangles and contained stencil-aperture pads, and four nearly rectangular USB pads are normalized to rectangles (less than 0.0002 mm outline difference) so the pinned exporter generates paste. See the review for stencil dimensions and assembler approval requirements.
 
 ## Rechargeable supply
 
@@ -40,6 +44,7 @@ flowchart LR
 - **Radio voltage:** the regulator sits between `VSYS` and `V3V0`. A charged pack can reach 4.2 V, and BQ24074 OUT is approximately 4.4 V on USB. Neither rail directly feeds the radio. The regulator supplies nominally 3.0 V while sufficient headroom is available; its output can fall near battery depletion. Its NC pin remains open.
 - **Status:** CHG and PGOOD have 100 kΩ pull-ups to `V3V0` and exposed test pads. Firmware access to these status signals has not been implemented.
 - **Capacitors:** the USB input uses 1 µF; BAT, VSYS and the regulator output each use 10 µF, with selected JLCPCB part codes above. Verify effective capacitance after DC bias and tolerance against the TI minimum requirements before fabrication.
+- **Layout:** input, battery, system and regulator bypass capacitors are placed near their supply pins. Solid ground pours on both layers and four tented ground vias around the charger connect its exposed pad to the ground plane; the vias remain outside the solderable exposed pad.
 
 References: [BQ24074 datasheet](https://www.ti.com/lit/ds/symlink/bq24074.pdf), [TPS7A02 datasheet](https://www.ti.com/lit/ds/symlink/tps7a02.pdf).
 
@@ -57,6 +62,8 @@ Select a conventional **1S, 3.7 V nominal / 4.2 V full-charge LiPo pack**, with 
 
 J2 is on the top at the left edge, keeping its body away from the cell space. The harness will need to reach it from the bottom; cable routing is part of the later enclosure work. No populated components or USB through-hole anchors occupy the reserved bottom rectangle. Add a suitable insulating mounting layer and verify pouch swelling, connector clearance and encoder locating-peg tolerances on the mechanical assembly. PCB thickness remains 1.6 mm. Overall enclosure thickness is not established yet.
 
+The pack connector body is approximately **5.5 mm tall**, exceeding the encoder's 3.5 mm body. Moving USB-C 0.7 mm inward brings its nominal imported model inside the circle with approximately 0.26 mm radial clearance; this is not an enclosure or manufacturing tolerance allowance.
+
 ## Encoder and mechanical direction
 
 The [GT-EVA01AA-L1 drawing](https://datasheet.lcsc.com/datasheet/pdf/d558dce12d76d23321eaeb216a98bcc8.pdf?productCode=C17702124) specifies a **4.8 × 3.9 × 3.5 mm** SMD encoder body with a square shaft socket and downward push switch. This replaces the ALPS part with a 24.5 mm actuator height. A short knob stem will be designed later; 3.5 mm describes the encoder body, not the final knob or enclosure height.
@@ -71,11 +78,24 @@ The new encoder drawing gives a **50 mA / 12 V rating**, but **does not specify 
 
 ## Radio and programming
 
-The module is placed near the right edge with a keepout on both copper layers extending from its antenna toward the edge. The battery allocation ends before that region. Confirm antenna clearance against the exact module reference design, including the battery, magnets, phone and enclosure.
+The ANNA-B112-00B module uses an exact JLCPCB import and the linked original
+OBJ/STEP models. It is 6.5 × 6.5 × 1.2 mm and operates from the regulated 3.0 V rail.
 
-GPIO assignments remain P0.11 for A, P0.12 for B, P0.13 for push and P0.21 for reset. Test pads expose the regulated supply, ground, SWD, reset, A/B, battery, system supply, USB input and charger status. The fixture must not drive voltage into `VBAT`; avoid contention with USB or battery power when using an externally powered debug fixture.
+Encoder A/B/push connect to module GPIO_13/14/15, corresponding to nRF52832
+P0.14/P0.15/P0.16. Reset remains P0.21. Test pads expose supply, ground, SWD,
+reset, A/B, battery, system supply, USB input and charger status. Do not drive
+the battery rail from the debug fixture or contend with USB/battery power.
 
-The Raytac module still uses a land pattern adapted from [Bishop Fox's MDBT42Q-P512KV2 footprint](https://github.com/BishopFox/mellon/blob/main/Mellon/ul_MDBT42Q-P512KV2/KiCADv6/footprints.pretty/MDBT42Q-P512KV2_RAY.kicad_mod). Pad numbering was checked against the [MDBT42Q-512K KiCad symbol](https://github.com/devbisme/skidl/blob/master/src/skidl/tools/skidl/libs/RF_Module_sklib.py). Its separate [MDBT42Q STEP model](https://github.com/yuhki50/kicad-packages3D/blob/master/Raytac.3dshapes/MDBT42Q.step) is used under [CC BY-SA 4.0](https://github.com/yuhki50/kicad-packages3D/blob/master/LICENSE). Confirm geometry and pin mapping against the exact 512KV2 module. Sourcing this module for JLCPCB-only assembly remains unresolved.
+The internal antenna feed, return tuning strip, copper voids and ground
+stitching follow the PCB-edge design in Appendix B of the
+[u-blox integration manual](https://content.u-blox.com/sites/default/files/ANNA-B112_SIM_UBX-18009821.pdf).
+ANT_PCB is open. The circular ground plane and assembled enclosure need RF
+qualification; this carrier is not claimed to inherit reference-board certification.
+
+There is no external 32.768 kHz crystal. XL1/XL2 are grounded for calibrated
+internal LFRC operation. ANNA includes DC-DC inductors; use its manufacturer
+firmware configuration. Factory u-connectXpress must be erased for a custom
+counter application. Firmware is not implemented yet.
 
 ## Firmware and app proposal
 
@@ -101,9 +121,12 @@ npx tsci check schematic-placement
 npx tsci check placement
 npx tsci build --pcb-png --schematic-png
 npm run check:power
+npm run check:fabrication
 npx tsci check shorts dist/index/circuit.json
 ```
 
 `check:power` verifies built-netlist rail isolation, separate USB-C CC pull-downs, charger mode, the pack sensor connection, unobstructed battery allocation and copper containment inside the circular board. It supplements the CLI checks; it does not prove charger behavior, thermal performance or mechanical fit. Generated previews remain in ignored `dist/`; snapshots and ZIP bundles are excluded from the source package.
 
-CLI lint warnings remain for generic passive footprints, missing pin annotations/courtyards and saved-route export. Review the selected footprints, charger layout and thermal grounding before fabrication. The exact battery, low-current input qualification, radio sourcing, RF performance and enclosure fit are remaining product gates.
+`check:fabrication` requires JLCPCB codes on every populated part and checks via dimensions/spacing, plated-hole rings, trace widths, stencil coverage and Circuit JSON errors. `scripts/check-gerbers.py` independently checks actual exported copper connectivity and manufacturing geometry; its commands and dependencies are in the review.
+
+CLI lint warnings remain for generic passive footprints, missing pin annotations/courtyards and saved-route export. The KiCad export has keepout and filled-zone translation limitations described in the review. The exact battery, low-current input qualification, capacitor bias, current part stock, RF performance and enclosure fit are remaining product gates.

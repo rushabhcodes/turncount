@@ -27,7 +27,20 @@ const onRail = (ref, pin, name) => assert.equal(port(ref, pin), rail(name), `${r
 
 assert.equal(new Set(["USB_5V", "VBAT", "VSYS", "V3V0", "GND"].map(rail)).size, 5,
   "USB, battery, system, regulated supply and ground must remain distinct")
-onRail("U1", "VDD", "V3V0")
+onRail("U1", "VCC", "V3V0")
+assert.equal(component("U1").manufacturer_part_number, "ANNA-B112-00B")
+assert.ok(component("U1").supplier_part_numbers.jlcpcb.includes("C2931350"))
+for (const pin of ["GND3","GND2","GND1","GND5","GND4","GND7","GND6","GND10","GND9","GND12","GND8","GND14","GND13","GND11","EGP1","EGP2","EGP4","EGP3","XL1","XL2","ANT_GND1","ANT_GND2"]) onRail("U1", pin, "GND")
+for (const [i, signal] of ["A", "B", "SW"].entries()) onRail("U1", `GPIO_${13 + i}`, `ENC_${signal}`)
+assert.ok(port("U1", "ANT"), "Antenna feed must be connected")
+assert.equal(port("U1", "ANT"), port("U1", "ANT_INT"))
+assert.notEqual(port("U1", "ANT"), rail("GND"))
+assert.notEqual(port("U1", "ANT"), rail("V3V0"))
+assert.ok(!port("U1", "ANT_PCB"), "PCB-edge antenna configuration requires ANT_PCB open")
+assert.equal(port("U1", "SWDCLK"), port("TP3", "pin1"))
+assert.equal(port("U1", "SWDIO"), port("TP4", "pin1"))
+assert.equal(port("U1", "RESET_N"), port("TP5", "pin1"))
+assert.equal(port("U1", "RESET_N"), port("R7", "pin2"))
 for (const pin of ["IN", "EN"]) onRail("U3", pin, "VSYS")
 onRail("U3", "OUT", "V3V0")
 onRail("U2", "IN", "USB_5V")
@@ -66,15 +79,15 @@ for (const entry of byType("pcb_smtpad")) {
   else if (entry.shape === "polygon") extent = Math.max(...entry.points.map(({ x, y }) => Math.hypot(x, y)))
   else extent = Math.max(...[-1, 1].flatMap((dx) => [-1, 1].map((dy) =>
     Math.hypot(entry.x + dx * entry.width / 2, entry.y + dy * entry.height / 2))))
-  assert.ok(extent < 23.99, `Pad ${entry.pcb_smtpad_id} crosses the 48 mm circular edge`)
+  assert.ok(extent < 23.79, `Pad ${entry.pcb_smtpad_id} violates the 0.2 mm circular edge margin`)
 }
 for (const entry of byType("pcb_via")) {
-  assert.ok(Math.hypot(entry.x, entry.y) + entry.outer_diameter / 2 < 23.99, "Via crosses circular edge")
+  assert.ok(Math.hypot(entry.x, entry.y) + entry.outer_diameter / 2 < 23.79, "Via violates circular edge margin")
 }
 for (const entry of byType("pcb_trace")) {
   for (const point of entry.route) {
     if (point.x === undefined || point.y === undefined) continue
-    assert.ok(Math.hypot(point.x, point.y) + (point.width ?? 0.2) / 2 < 23.99, "Trace crosses circular edge")
+    assert.ok(Math.hypot(point.x, point.y) + (point.width ?? 0.2) / 2 < 23.79, "Trace violates circular edge margin")
   }
 }
 assert.equal(circuit.filter((entry) => entry.type.endsWith("_error")).length, 0, "Circuit JSON has errors")

@@ -1,4 +1,5 @@
 import { Fragment } from "react"
+import { ProbePad } from "./ProbePad"
 import { BQ24074RGTR } from "../imports/BQ24074RGTR"
 import { TPS7A0230PDBVR } from "../imports/TPS7A0230PDBVR"
 import { TYPE_C_31_M_12 } from "../imports/TYPE_C_31_M_12"
@@ -38,22 +39,30 @@ const connections: [string, string][] = [
 export const RechargeablePower = () => (
   <>
     <TYPE_C_31_M_12 name="J1" schSectionName="power" schX={-48} schY={0}
-      pcbX={0} pcbY={-18.25} />
+      pcbX={0} pcbY={-17.55} />
+    {/* Escape VBUS toward the board interior before changing layer. */}
+    <tracehint for=".J1 > .VBUS1" offset={{ x: 2.4, y: -13.7, via: true, to_layer: "bottom" }} />
+    <tracehint for=".J1 > .VBUS2" offset={{ x: -2.4, y: -13.7, via: true, to_layer: "bottom" }} />
+    <tracehint for=".J1 > .GND1" offset={{ x: -3.2, y: -14.1, via: true, to_layer: "bottom" }} />
+    <tracehint for=".J1 > .GND2" offset={{ x: 3.2, y: -14.1, via: true, to_layer: "bottom" }} />
     <S3B_PH_SM4_TB_LF__SN_ name="J2" schSectionName="power" schX={-36} schY={14}
       pcbX={-16} pcbY={0} pcbRotation={90} />
     <BQ24074RGTR name="U2" schSectionName="power" schX={-36} schY={0}
       pcbX={-12} pcbY={11} />
+    <tracehint for=".U2 > .N_CHG" offset={{ x: -9.5, y: 9.1, via: true, to_layer: "bottom" }} />
+    <tracehint for=".R9 > .pin2" offset={{ x: 1.5, y: -10.5, via: true, to_layer: "bottom" }} />
+    <tracehint for=".U2 > .IN" offset={{ x: -11.25, y: 13.2, via: true, to_layer: "bottom" }} />
     <TPS7A0230PDBVR name="U3" schSectionName="power" schX={-22} schY={0}
       pcbX={-4} pcbY={14} pcbRotation={180} />
 
     <resistor name="R8" resistance="5.1k" footprint="0402"
-      schSectionName="power" schX={-50} schY={-12} schRotation={-90} pcbX={-6.5} pcbY={-14} />
+      schSectionName="power" schX={-50} schY={-12} schRotation={-90} pcbX={-6.5} pcbY={-14} pcbRotation={180} />
     <resistor name="R9" resistance="5.1k" footprint="0402"
       schSectionName="power" schX={-46} schY={-12} schRotation={-90} pcbX={1} pcbY={-12} />
     <resistor name="R10" resistance="8.66k" footprint="0402"
       schSectionName="power" schX={-38} schY={-12} schRotation={-90} pcbX={-14} pcbY={14.5} />
     <resistor name="R11" resistance="3.09k" footprint="0402"
-      schSectionName="power" schX={-34} schY={-12} schRotation={-90} pcbX={-9.5} pcbY={15.5} />
+      schSectionName="power" schX={-34} schY={-12} schRotation={-90} pcbX={-7.5} pcbY={16.5} />
     <resistor name="R12" resistance="100k" footprint="0402"
       schSectionName="power" schX={-28} schY={-12} schRotation={-90} pcbX={4} pcbY={12} />
     <resistor name="R13" resistance="100k" footprint="0402"
@@ -61,22 +70,32 @@ export const RechargeablePower = () => (
 
     <capacitor name="C6" capacitance="1uF" footprint="0603"
       manufacturerPartNumber="CL10A105KB8NNNC" supplierPartNumbers={{ jlcpcb: ["C15849"] }}
-      schSectionName="power" schX={-42} schY={7} schRotation={-90} pcbX={-16.5} pcbY={10} />
+      schSectionName="power" schX={-42} schY={7} schRotation={-90} pcbX={-10.75} pcbY={14.8}
+      pcbRotation={90} />
     {[
-      ["C7", -40, 14, -14.5, 6.5],
-      ["C8", -28, 7, -7.5, 11],
-      ["C9", -16, 0, 0, 15.5],
+      ["C7", -40, 14, -16.5, 10.75],
+      ["C8", -28, 7, -8, 10.75],
+      ["C9", -16, 0, 0.1, 14.95],
     ].map(([name, schX, schY, pcbX, pcbY]) => (
       <Fragment key={String(name)}>
         <capacitor name={String(name)} capacitance="10uF" footprint="0805"
           manufacturerPartNumber="CL21A106KAYNNNE" supplierPartNumbers={{ jlcpcb: ["C15850"] }}
           schSectionName="power" schX={Number(schX)} schY={Number(schY)} schRotation={-90}
-          pcbX={Number(pcbX)} pcbY={Number(pcbY)} />
+          pcbX={Number(pcbX)} pcbY={Number(pcbY)} pcbRotation={name === "C7" ? 180 : 0} />
+      </Fragment>
+    ))}
+    {/* Ground stitching around the charger, outside its solderable EP.
+        No open drilled hole is placed in the exposed-pad stencil aperture. */}
+    {[[-12, 8.5], [-9.5, 13.5], [-12, 13.5], [-14.5, 13]].map(([x, y], i) => (
+      <Fragment key={`charger-ground-${i}`}>
+        <via name={`CHARGER_GND_${i}`} pcbX={x} pcbY={y}
+          fromLayer="top" toLayer="bottom" connectsTo="net.GND"
+          holeDiameter="0.3mm" outerDiameter="0.6mm" tented="both_sides" />
       </Fragment>
     ))}
     {[[13, -14], [15, -14], [11, -16], [4, 16], [6.5, 16]].map(([x, y], i) => (
       <Fragment key={`power-test-${i}`}>
-        <testpoint name={`TP${i + 8}`} footprintVariant="pad" padDiameter="1mm"
+        <ProbePad name={`TP${i + 8}`}
           schSectionName="power" schX={-16} schY={8 + i * 3} pcbX={x} pcbY={y} />
       </Fragment>
     ))}
