@@ -6,8 +6,8 @@ const zFromBoard = (z: number) => z - boardCenter
 export const EnclosureAssembly = () => {
   const browser = typeof location !== "undefined"
   const model = (name: string) => browser
-    ? `/api/files/static/mechanical/output/${name}_assembly.stl`
-    : `./mechanical/output/${name}_assembly.stl`
+    ? `/api/files/static/mechanical/output/${name}_assembly.glb`
+    : `./mechanical/output/${name}_assembly.glb`
   return (
     <assembly.cadassembly name="turncount_enclosure" displayName="TurnCount printed enclosure">
       <cadmodel modelUrl={model("01_lower_tray")} pcbZ={zFromBoard(11.5 / 2)} />

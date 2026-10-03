@@ -8,18 +8,19 @@ plug.
 
 ## Printable parts
 
-| Part | STL | Material |
+| Part | 3MF | Material |
 | --- | --- | --- |
-| PCB tray and magnetic base | `output/01_lower_tray.stl` | PETG or ASA |
-| Retaining cover | `output/02_upper_cover.stl` | PETG or ASA |
-| Fluted rotating cap | `output/03_rotating_cap.stl` | PETG or ASA |
-| Optional phone-contact ring | `output/04_phone_grip_TPU.stl` | TPU |
+| PCB tray and magnetic base | `output/01_lower_tray.3mf` | PETG or ASA |
+| Retaining cover | `output/02_upper_cover.3mf` | PETG or ASA |
+| Fluted rotating cap | `output/03_rotating_cap.3mf` | PETG or ASA |
+| Optional phone-contact ring | `output/04_phone_grip_TPU.3mf` | TPU |
 
-The plain STL files are the printable models. The recentered `*_assembly.stl`
-files are used by both the CLI and browser 3D viewers; do not print them.
+The 3MF files are print oriented. The `*_assembly.glb` files are recentered
+viewer models; do not print those. The circuit uses the GLB files so the
+published 3D viewer can render the enclosure.
 The original vendor CAD links in the
 imported PCB components remain untouched.
-The cover and cap STLs have their closed top faces on the build plate; the
+The cover and cap print files have their closed top faces on the build plate; the
 tray and TPU ring have their phone-facing sides on the build plate.
 
 `output/assembled.png`, `output/exploded.png`, `output/phone_side.png`,
@@ -66,7 +67,7 @@ force still need a real test.
 
 ## Hardware and fit sequence
 
-1. Print the four STLs. Start with a dimensional test of the PCB bore, USB
+1. Print the four 3MF files. Start with a dimensional test of the PCB bore, USB
    opening, cap clearance, screw holes and magnet pockets.
 2. Fit six 6 × 2 mm disc magnets in the underside pockets with adhesive.
    Check polarity against the chosen phone mounting plate before gluing. The
