@@ -37,47 +37,47 @@ const connections: [string, string][] = [
 
 export const RechargeablePower = () => (
   <>
-    <TYPE_C_31_M_12 name="J1" schSectionName="power" schX={-48} schY={0}
+    <TYPE_C_31_M_12 name="J1" schSectionName="power" schX={-7} schY={0}
       pcbX={0} pcbY={-18.25} />
-    <S3B_PH_SM4_TB_LF__SN_ name="J2" schSectionName="power" schX={-36} schY={14}
-      pcbX={-16} pcbY={0} pcbRotation={90} />
-    <BQ24074RGTR name="U2" schSectionName="power" schX={-36} schY={0}
+    <S3B_PH_SM4_TB_LF__SN_ name="J2" schSectionName="power" schX={-1} schY={6}
+      pcbX={-12} pcbY={0} pcbRotation={90} />
+    <BQ24074RGTR name="U2" schSectionName="power" schX={-1} schY={0}
       pcbX={-12} pcbY={11} />
-    <TPS7A0230PDBVR name="U3" schSectionName="power" schX={-22} schY={0}
+    <TPS7A0230PDBVR name="U3" schSectionName="power" schX={6} schY={0}
       pcbX={-4} pcbY={14} pcbRotation={180} />
 
-    <resistor name="R8" resistance="5.1k" footprint="0402"
-      schSectionName="power" schX={-50} schY={-12} schRotation={-90} pcbX={-6.5} pcbY={-14} />
-    <resistor name="R9" resistance="5.1k" footprint="0402"
-      schSectionName="power" schX={-46} schY={-12} schRotation={-90} pcbX={1} pcbY={-12} />
-    <resistor name="R10" resistance="8.66k" footprint="0402"
-      schSectionName="power" schX={-38} schY={-12} schRotation={-90} pcbX={-14} pcbY={14.5} />
-    <resistor name="R11" resistance="3.09k" footprint="0402"
-      schSectionName="power" schX={-34} schY={-12} schRotation={-90} pcbX={-9.5} pcbY={15.5} />
-    <resistor name="R12" resistance="100k" footprint="0402"
-      schSectionName="power" schX={-28} schY={-12} schRotation={-90} pcbX={4} pcbY={12} />
-    <resistor name="R13" resistance="100k" footprint="0402"
-      schSectionName="power" schX={-24} schY={-12} schRotation={-90} pcbX={6.5} pcbY={12} />
+    <resistor name="R8" resistance="5.1k" footprint="jlcpcb:C25905" supplierPartNumbers={{ jlcpcb: ["C25905"] }}
+      schSectionName="power" schX={-8} schY={-5} schRotation={-90} pcbX={-6.5} pcbY={-14} />
+    <resistor name="R9" resistance="5.1k" footprint="jlcpcb:C25905" supplierPartNumbers={{ jlcpcb: ["C25905"] }}
+      schSectionName="power" schX={-5} schY={-5} schRotation={-90} pcbX={1} pcbY={-12} pcbRotation={180} />
+    <resistor name="R10" resistance="8.66k" footprint="jlcpcb:C227261" supplierPartNumbers={{ jlcpcb: ["C227261"] }}
+      schSectionName="power" schX={-2} schY={-5} schRotation={-90} pcbX={-14} pcbY={14.5} />
+    <resistor name="R11" resistance="3.09k" footprint="jlcpcb:C11460" supplierPartNumbers={{ jlcpcb: ["C11460"] }}
+      schSectionName="power" schX={1} schY={-5} schRotation={-90} pcbX={-9.5} pcbY={15.5} />
+    <resistor name="R12" resistance="100k" footprint="jlcpcb:C25741" supplierPartNumbers={{ jlcpcb: ["C25741"] }}
+      schSectionName="power" schX={5} schY={-5} schRotation={-90} pcbX={4} pcbY={12} />
+    <resistor name="R13" resistance="100k" footprint="jlcpcb:C25741" supplierPartNumbers={{ jlcpcb: ["C25741"] }}
+      schSectionName="power" schX={8} schY={-5} schRotation={-90} pcbX={6.5} pcbY={12} />
 
     <capacitor name="C6" capacitance="1uF" footprint="0603"
       manufacturerPartNumber="CL10A105KB8NNNC" supplierPartNumbers={{ jlcpcb: ["C15849"] }}
-      schSectionName="power" schX={-42} schY={7} schRotation={-90} pcbX={-16.5} pcbY={10} />
+      schSectionName="power" schX={-4} schY={3} schRotation={-90} pcbX={-16.5} pcbY={10} />
     {[
-      ["C7", -40, 14, -14.5, 6.5],
-      ["C8", -28, 7, -7.5, 11],
-      ["C9", -16, 0, 0, 15.5],
+      ["C7", -4, 6, -14.5, 6.5],
+      ["C8", 3, 3, -7.5, 11],
+      ["C9", 9, -1, 0, 15.5],
     ].map(([name, schX, schY, pcbX, pcbY]) => (
       <Fragment key={String(name)}>
         <capacitor name={String(name)} capacitance="10uF" footprint="0805"
           manufacturerPartNumber="CL21A106KAYNNNE" supplierPartNumbers={{ jlcpcb: ["C15850"] }}
           schSectionName="power" schX={Number(schX)} schY={Number(schY)} schRotation={-90}
-          pcbX={Number(pcbX)} pcbY={Number(pcbY)} />
+          pcbX={Number(pcbX)} pcbY={Number(pcbY)} pcbRotation={name === "C7" ? 180 : undefined} />
       </Fragment>
     ))}
     {[[13, -14], [15, -14], [11, -16], [4, 16], [6.5, 16]].map(([x, y], i) => (
       <Fragment key={`power-test-${i}`}>
         <testpoint name={`TP${i + 8}`} footprintVariant="pad" padDiameter="1mm"
-          schSectionName="power" schX={-16} schY={8 + i * 3} pcbX={x} pcbY={y} />
+          schSectionName="power" schX={11} schY={i === 4 ? -5.5 : 8 - i * 3} pcbX={x} pcbY={y} />
       </Fragment>
     ))}
     {/* Mechanical allocation only: an external pack, not a selected battery SKU. */}

@@ -2,7 +2,13 @@
 
 TurnCount is a proposed rechargeable rotary counter that mounts magnetically to a phone. Turning the dial updates a signed count in a companion iOS or Android app over Bluetooth Low Energy (BLE).
 
-**Status:** the repository implements a 48 mm circular, two-layer PCB prototype with USB-C charging, a regulated radio supply, and a low-profile SMD encoder. A bottom-side space allocation is provided for an external LiPo pack beneath the encoder. The exact battery SKU, knob, enclosure, firmware and apps are not yet implemented. This is a design review prototype, not a fabrication release.
+**Status:** the repository implements a 48 mm round, two-layer PCB prototype with a left-side battery-lead notch, USB-C charging, a regulated radio supply, and a low-profile SMD encoder. A bottom-side space allocation is provided for an external LiPo pack beneath the encoder. A [print-and-fit enclosure prototype](mechanical/README.md) now includes the knob and magnetic base; the exact battery SKU, firmware and apps are not yet implemented. This is a design review prototype, not a fabrication release.
+
+## Schematic sheets
+
+The schematic viewer has three selectable, compact sheets: [Power](docs/schematics/power.svg) (USB-C, charger, battery connector and 3 V regulator), [Inputs](docs/schematics/inputs.svg) (encoder and A/B/push filters), and [Radio](docs/schematics/radio.svg) (BLE module, debug LED and programming pads). Use the **Sheet** menu in the Schematic view to switch between them. The SVGs can be zoomed for component pin details.
+
+The encoder nets before the series resistors are labeled `ENC_A_RAW`, `ENC_B_RAW` and `ENC_SW_RAW`; the filtered signals to the radio are `ENC_A`, `ENC_B` and `ENC_SW`.
 
 ## Selected components
 
@@ -15,9 +21,10 @@ TurnCount is a proposed rechargeable rotary counter that mounts magnetically to 
 | Three-position pack/NTC connector | [JST S3B-PH-SM4-TB(LF)(SN)](https://www.lcsc.com/product-detail/C265101.html) | C265101 |
 | Charger input bypass, 1 µF / 50 V | Samsung CL10A105KB8NNNC | C15849 |
 | Battery, system and regulator bypass, 10 µF / 25 V | Samsung CL21A106KAYNNNE | C15850 |
-| Bluetooth module | Raytac MDBT42Q-512KV2 (nRF52832) | No verified JLCPCB listing yet |
+| Bluetooth module | Raytac MDBT42Q-512KV2 (nRF52832) | C2828282 |
+| Debug indicator | KENTO KT-0603R red LED, 0603 | C2286 |
 
-Stock is indicative and must be checked when ordering. The encoder, USB-C receptacle, charger, regulator and pack connector were generated using `tsci import <code> --jlcpcb --use-exact-footprint`, **without `--download`**. Their remote OBJ/STEP model references come from the selected JLCPCB/EasyEDA entries. No substitute encoder model, custom knob or battery model has been added.
+Stock is indicative and must be checked when ordering. The encoder, USB-C receptacle, charger, regulator, pack connector and radio module were generated using `tsci import <code> --jlcpcb --use-exact-footprint`, **without `--download`**. Their remote OBJ/STEP model references come from the selected JLCPCB/EasyEDA entries. The separate enclosure prototype adds a printable knob; no substitute encoder or battery model has been added.
 
 The imported pack connector's two mechanical solder tabs are represented as separate ground pads; the three electrical contacts are unchanged. Its aliases identify the intended harness wiring, not a universal battery connector pinout.
 
@@ -45,7 +52,7 @@ References: [BQ24074 datasheet](https://www.ti.com/lit/ds/symlink/bq24074.pdf), 
 
 ### Battery contract and placement
 
-The battery is an **external wired pack**, not a soldered coin cell or a selected purchasable SKU. The previous CR2032 holder is removed. The current mechanical allocation is **20 × 30 mm**, centered beneath the encoder, with a **3 mm cell-thickness target**. These are space constraints for the later mechanical design, not a claim that a specific protected pack fits.
+The battery is an **external wired pack**, not a soldered coin cell or a selected purchasable SKU. The previous CR2032 holder is removed. The PCB allocation is **20 × 30 mm**, centered beneath the encoder, with a **3 mm cell-thickness target**. The enclosure prototype has a larger pocket for fit testing; neither allocation confirms that a specific protected pack fits.
 
 Select a conventional **1S, 3.7 V nominal / 4.2 V full-charge LiPo pack**, with approximately **200 mAh target capacity**, rated for the charger's worst-case current, integral overcharge/over-discharge/short-circuit protection, and a compatible pack-mounted NTC. Pack protection, sensor wiring, connector polarity and charging-temperature limits must be verified against its datasheet. A 4.35 V high-voltage cell is not the intended battery.
 
@@ -55,11 +62,11 @@ Select a conventional **1S, 3.7 V nominal / 4.2 V full-charge LiPo pack**, with 
 | 2 | Protected pack negative, `GND` |
 | 3 | NTC sensor, referenced to pack negative |
 
-J2 is on the top at the left edge, keeping its body away from the cell space. The harness will need to reach it from the bottom; cable routing is part of the later enclosure work. No populated components or USB through-hole anchors occupy the reserved bottom rectangle. Add a suitable insulating mounting layer and verify pouch swelling, connector clearance and encoder locating-peg tolerances on the mechanical assembly. PCB thickness remains 1.6 mm. Overall enclosure thickness is not established yet.
+J2 is on the top, set inward from the left-side **6 mm wide × about 5.8 mm deep** PCB edge notch ([board preview](docs/pcb-battery-lead-notch.png)). The notch opens into the tray's lead trench so the three pack wires can pass below the PCB toward the central battery pocket. The harness bend radius and strain relief still need a physical fit test. No populated components or USB through-hole anchors occupy the reserved bottom rectangle. Add a suitable insulating mounting layer and verify pouch swelling, connector clearance and encoder locating-peg tolerances on the mechanical assembly. PCB thickness remains 1.6 mm; the prototype body is 18.8 mm high before the rotating cap.
 
 ## Encoder and mechanical direction
 
-The [GT-EVA01AA-L1 drawing](https://datasheet.lcsc.com/datasheet/pdf/d558dce12d76d23321eaeb216a98bcc8.pdf?productCode=C17702124) specifies a **4.8 × 3.9 × 3.5 mm** SMD encoder body with a square shaft socket and downward push switch. This replaces the ALPS part with a 24.5 mm actuator height. A short knob stem will be designed later; 3.5 mm describes the encoder body, not the final knob or enclosure height.
+The [GT-EVA01AA-L1 drawing](https://datasheet.lcsc.com/datasheet/pdf/d558dce12d76d23321eaeb216a98bcc8.pdf?productCode=C17702124) specifies a **4.8 × 3.9 × 3.5 mm** SMD encoder body with a square shaft socket and downward push switch. This replaces the ALPS part with a 24.5 mm actuator height. The [printed cap prototype](mechanical/README.md) uses a metal drive pin; 3.5 mm describes the encoder body, not the final knob or enclosure height.
 
 The imported footprint is shifted relative to the board origin so its **shaft axis remains at (0, 0)**. The two locating-hole centers are 1.4 mm below the shaft axis in the manufacturer's drawing. The exact imported land pattern and remote model are retained.
 
@@ -75,7 +82,9 @@ The module is placed near the right edge with a keepout on both copper layers ex
 
 GPIO assignments remain P0.11 for A, P0.12 for B, P0.13 for push and P0.21 for reset. Test pads expose the regulated supply, ground, SWD, reset, A/B, battery, system supply, USB input and charger status. The fixture must not drive voltage into `VBAT`; avoid contention with USB or battery power when using an externally powered debug fixture.
 
-The Raytac module still uses a land pattern adapted from [Bishop Fox's MDBT42Q-P512KV2 footprint](https://github.com/BishopFox/mellon/blob/main/Mellon/ul_MDBT42Q-P512KV2/KiCADv6/footprints.pretty/MDBT42Q-P512KV2_RAY.kicad_mod). Pad numbering was checked against the [MDBT42Q-512K KiCad symbol](https://github.com/devbisme/skidl/blob/master/src/skidl/tools/skidl/libs/RF_Module_sklib.py). Its separate [MDBT42Q STEP model](https://github.com/yuhki50/kicad-packages3D/blob/master/Raytac.3dshapes/MDBT42Q.step) is used under [CC BY-SA 4.0](https://github.com/yuhki50/kicad-packages3D/blob/master/LICENSE). Confirm geometry and pin mapping against the exact 512KV2 module. Sourcing this module for JLCPCB-only assembly remains unresolved.
+`LED1` is a GPIO-controlled debug indicator on module pin 28 (`P0.14`). `R14` (1 kΩ) limits current from that pin to the red LED anode; the cathode is grounded. Driving P0.14 high turns it on. Keep it off during sleep and use brief pulses for diagnostics. The LED is on the top PCB face for bench debugging; the printed enclosure currently has no dedicated light window, so assembled visibility needs a fit test or a light pipe.
+
+The Raytac module now uses the exact JLCPCB/EasyEDA import for [C2828282](https://jlcpcb.com/partdetail/Raytac-MDBT42Q512K/C2828282), including its remote 3D model. The generated symbol lacked the GPIO and reset names used by this design, so those pin aliases were completed in the local import against [Raytac's pin assignment](https://www.raytac.com/upload/download_files/38a8a4a0aff945d8484507d60058109b.pdf). Confirm model geometry against the exact 512KV2 module. Check stock and assembly availability when ordering.
 
 ## Firmware and app proposal
 
@@ -100,10 +109,9 @@ npx tsci check netlist
 npx tsci check schematic-placement
 npx tsci check placement
 npx tsci build --pcb-png --schematic-png
-npm run check:power
 npx tsci check shorts dist/index/circuit.json
 ```
 
-`check:power` verifies built-netlist rail isolation, separate USB-C CC pull-downs, charger mode, the pack sensor connection, unobstructed battery allocation and copper containment inside the circular board. It supplements the CLI checks; it does not prove charger behavior, thermal performance or mechanical fit. Generated previews remain in ignored `dist/`; snapshots and ZIP bundles are excluded from the source package.
+Generated previews remain in ignored `dist/`; snapshots and ZIP bundles are excluded from the source package. The CLI checks do not prove charger behavior, thermal performance or mechanical fit.
 
-CLI lint warnings remain for generic passive footprints, missing pin annotations/courtyards and saved-route export. Review the selected footprints, charger layout and thermal grounding before fabrication. The exact battery, low-current input qualification, radio sourcing, RF performance and enclosure fit are remaining product gates.
+CLI lint warnings remain for missing pin annotations/courtyards and saved-route export. Review the selected footprints, charger layout and thermal grounding before fabrication. The exact battery, low-current input qualification, radio stock, RF performance and enclosure fit are remaining product gates.
