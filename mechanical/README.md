@@ -1,10 +1,10 @@
 # TurnCount enclosure prototype
 
-This is a fresh print-and-fit enclosure for the current 48 mm rechargeable
-TurnCount PCB. It includes a phone-facing magnetic base, battery space, USB-C
-access, a screw-retained cover and a rotating bottle-cap style knob. It is not
-yet validated against a manufactured PCB, selected battery, phone case or USB
-plug.
+This is a print-and-fit enclosure for the 48 mm TurnCount PCB. It includes a
+phone-facing magnetic base, battery space, an unused legacy USB opening, a
+screw-retained cover and a rotating bottle-cap style knob. The PCB now uses a
+CR2032 and a board-mounted holder; the existing enclosure has not been updated
+to fit or clear that holder and battery.
 
 ## Printable parts
 
@@ -33,7 +33,7 @@ models.
 
 | Feature | Design value |
 | --- | ---: |
-| PCB diameter and thickness | 48.0 × 1.6 mm, with a 6 mm wide left-side lead notch |
+| PCB diameter and thickness | 48.0 × 1.6 mm, circular outline |
 | PCB bore | 48.7 mm |
 | Stationary body diameter | 64.0 mm |
 | Fluted cap outer diameter | about 69.4 mm |
@@ -52,14 +52,10 @@ stationary body so fingers can turn it without reaching into the body. A shallow
 cover bead and cap recess retain the cap while allowing axial push travel;
 deburr and tune the snap fit on a first print before installing the encoder.
 
-The battery pocket is a design allowance. The PCB currently reserves 20 × 30
-mm beneath the encoder; no battery SKU, connector lead dress or swelling
-allowance has been approved. A 20 × 30 × 4.5 mm reference block fits inside the
-nominal cavity, but the pack and insulation must be measured on a real build.
-The left-side lead trench is aligned with the PCB edge notch (from x = −24 mm
-to x = −18 mm, y = −3 mm to +3 mm). J2 is set inward of the notch so the
-three pack wires can drop beneath the PCB into the tray channel. Check the
-actual plug, wire bend radius and strain relief on a physical assembly.
+The battery pocket was designed around a 20 × 30 mm pack and does not establish
+clearance for the MY-2032-16 holder (26.4 × 10.6 mm footprint) or a CR2032.
+Redesign and reprint the tray before fitting the coin cell. Verify the holder's
+metal clips, cell thickness, encoder underside and cover clearance together.
 The six magnets form three opposing pairs, with no magnet in the radio's
 positive-X/positive-Y antenna sector. The optional TPU ring has matching
 access holes so it does not cover the magnet pockets. RF behavior and holding
@@ -67,14 +63,14 @@ force still need a real test.
 
 ## Hardware and fit sequence
 
-1. Print the four 3MF files. Start with a dimensional test of the PCB bore, USB
-   opening, cap clearance, screw holes and magnet pockets.
+1. Print the four 3MF files. Start with a dimensional test of the PCB bore,
+   cap clearance, screw holes and magnet pockets. Treat the existing USB
+   opening and battery pocket as legacy geometry.
 2. Fit six 6 × 2 mm disc magnets in the underside pockets with adhesive.
    Check polarity against the chosen phone mounting plate before gluing. The
    pattern is a custom attachment pattern, not a verified MagSafe ring.
-3. Fit the selected protected 1S LiPo pack with insulation, strain relief and
-   clearance for swelling. Route its wires to J2 without pinching them beneath
-   the PCB. Verify connector polarity and NTC wiring.
+3. Do not fit a battery until the tray is redesigned for the CR2032 holder and
+   its cell. Check contact retention and battery replacement access.
 4. Seat the PCB, then close the cover using three M2 nylon screws. The cover
    holes are 2.32 mm clearance with 4.36 mm head recesses; the tray has 1.72
    mm pilot holes. Choose screw length after a physical fit test.
@@ -82,8 +78,7 @@ force still need a real test.
    0.8 mm square drive pin** to the encoder socket; trim its length on the
    actual board. Do not use a long printed pin or force the encoder switch.
 6. Add the TPU ring and test grip and magnetic holding force on the intended
-   phone/case. Check camera clearance, USB cable overmould clearance and BLE
-   range with the magnets installed.
+   phone/case. Check camera clearance and BLE range with the magnets installed.
 
-The USB receptacle's plug envelope, component heights, RF performance, magnet
-retention and chosen battery require a physical fit test with real parts.
+Component heights, coin-cell fit, RF performance and magnet retention require
+a physical fit test with real parts.
