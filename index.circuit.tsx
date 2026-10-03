@@ -93,19 +93,24 @@ const TurnCountBoard = () => (
       <schematictext schX={0} schY={3.9} fontSize={0.24}
         anchor="center" color="#334155" text="CR2032 direct supply · SWD programming" />
       <schematicsection name="hf_clock" displayName="32 MHz radio clock" />
-      <X201632MKB4SI name="X1" loadCapacitance="8pF" schSectionName="hf_clock" schX={4} schY={8}
-        pcbX={7} pcbY={14} pcbRotation={90} />
+      <X201632MKB4SI name="X1" noSchematicRepresentation pcbX={7} pcbY={14} pcbRotation={90} />
+      <schematicsymbol name="X1_SYMBOL" displayName="X1 · 32 MHz" chipRef=".X1"
+        symbolName="crystal_4pin" schSectionName="hf_clock" schX={4} schY={7}
+        connections={{
+          pin1: ".X1 > .XTAL1", gnd1: ".X1 > .GND1",
+          pin3: ".X1 > .XTAL2", gnd2: ".X1 > .GND2",
+        }} />
       <capacitor name="C13" capacitance="12pF" footprint="0603"
         schSectionName="hf_clock" schX={1} schY={7} schRotation={-90} pcbX={4} pcbY={14} />
       <capacitor name="C14" capacitance="12pF" footprint="0603"
         schSectionName="hf_clock" schX={7} schY={7} schRotation={-90} pcbX={10.5} pcbY={14} />
-      <trace from="U1.XC1" to="X1.X1" />
-      <trace from="U1.XC2" to="X1.X2" />
-      <trace from="X1.gnd1" to="net.GND" />
-      <trace from="X1.gnd2" to="net.GND" />
-      <trace from="X1.X1" to="C13.pin1" />
+      <trace from="U1.XC1" to="X1.XTAL1" />
+      <trace from="U1.XC2" to="X1.XTAL2" />
+      <trace from="X1.GND1" to="net.GND" />
+      <trace from="X1.GND2" to="net.GND" />
+      <trace from="X1.XTAL1" to="C13.pin1" />
       <trace from="C13.pin2" to="net.GND" />
-      <trace from="X1.X2" to="C14.pin1" />
+      <trace from="X1.XTAL2" to="C14.pin1" />
       <trace from="C14.pin2" to="net.GND" />
       <capacitor name="C1" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={3} schRotation={-90} pcbX={5.5} pcbY={-3} />
       <capacitor name="C2" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={0} schRotation={-90} pcbX={12} pcbY={-3} />
@@ -144,6 +149,8 @@ const TurnCountBoard = () => (
       width="5mm" height="5mm" layers={["top", "bottom"]} excludeRefs={[".ANT1"]} />
     <keepout shape="rect" pcbX={20.35} pcbY={0.8}
       width="0.8mm" height="0.8mm" layers={["bottom"]} />
+    <keepout shape="rect" pcbX={7} pcbY={14}
+      width="3mm" height="3mm" layers={["bottom"]} excludeRefs={[".X1"]} />
   </board>
 )
 

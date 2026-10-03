@@ -1,15 +1,22 @@
-import type { CrystalProps } from "@tscircuit/props"
+import type { ChipProps } from "@tscircuit/props"
 
-type ImportedCrystalProps = Omit<CrystalProps, "frequency" | "pinVariant">
+const pinLabels = {
+  pin1: ["XTAL1"],
+  pin2: ["GND1"],
+  pin3: ["XTAL2"],
+  pin4: ["GND2"],
+} as const
 
-export const X201632MKB4SI = (props: ImportedCrystalProps) => {
-  const { name = "X1", ...restProps } = props
+const pinAttributes = {
+  pin2: { requiresGround: true },
+  pin4: { requiresGround: true },
+} as const
 
+export const X201632MKB4SI = (props: ChipProps<typeof pinLabels>) => {
   return (
-    <crystal
-      name={name}
-      frequency="32MHz"
-      pinVariant="four_pin"
+    <chip
+      pinLabels={pinLabels}
+      pinAttributes={pinAttributes}
       supplierPartNumbers={{
   "jlcpcb": [
     "C718072"
@@ -32,7 +39,7 @@ export const X201632MKB4SI = (props: ImportedCrystalProps) => {
         pcbRotationOffset: 0,
         modelOriginPosition: { x: 0, y: -0.00011430000006384944, z: -0.01 },
       }}
-      {...restProps}
+      {...props}
     />
   )
 }
