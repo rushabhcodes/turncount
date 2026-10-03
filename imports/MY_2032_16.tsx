@@ -19,6 +19,8 @@ export const MY_2032_16 = (props: ChipProps<typeof pinLabels>) => {
       pinAttributes={pinAttributes}
       symbol={
         <symbol>
+          <schematictext schX={0} schY={0.12} fontSize={0.08}
+            anchor="center" color="#111111" text="BT1" />
           <port name="pin3" pinNumber={3} aliases={["3"]} direction="right" schX={0.5} schY={0} schStemLength={0.4} />
           <port name="pin1" pinNumber={1} aliases={["1"]} direction="left" schX={-0.5} schY={0} schStemLength={0.4} />
           <schematicpath points={[{"x":0.1,"y":0.1},{"x":0.1,"y":-0.08}]} strokeColor="#880000" />

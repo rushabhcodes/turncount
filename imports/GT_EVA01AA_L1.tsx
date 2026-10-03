@@ -10,12 +10,22 @@ const pinLabels = {
   pin7: ["D"]
 } as const
 
+const pinAttributes = {
+  pin1: { requiresGround: true },
+  pin2: { requiresGround: true },
+  pin4: { requiresGround: true },
+  pin7: { requiresGround: true },
+} as const
+
 export const GT_EVA01AA_L1 = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
       pinLabels={pinLabels}
+      pinAttributes={pinAttributes}
       symbol={
         <symbol>
+          <schematictext schX={0.3} schY={0.3} fontSize={0.12}
+            anchor="center" color="#111111" text="ENC1" />
           <schematicrect schX={0} schY={0} width={1} height={0.8} strokeWidth={0.02} color="#880000" />
           <schematicpath points={[{"x":0.2,"y":0.2},{"x":0.06,"y":0.2}]} strokeColor="#880000" />
           <schematicpath points={[{"x":-0.12,"y":0.2},{"x":-0.06,"y":0.2}]} strokeColor="#880000" />

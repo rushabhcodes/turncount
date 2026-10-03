@@ -2,7 +2,7 @@
 
 TurnCount is a 48 mm round, two-layer rotary encoder prototype. The current circuit uses a CR2032 coin cell, a bare Nordic nRF52810-QFAA-R QFN-48, and a low-profile SMD encoder. USB-C charging and the LiPo charger/regulator path have been removed. The coin cell feeds the nRF52810 supply directly; its 1.7–3.6 V operating range accommodates a CR2032 over its discharge curve.
 
-This remains a design review prototype, not a fabrication release. The CR2032 holder, enclosure clearance, RF layout and antenna tuning need physical review. The nRF52810 requires its supply decoupling, DEC capacitors, ground exposed pad, RF matching network and antenna, which are represented in the circuit.
+This remains a design review prototype, not a fabrication release. The CR2032 holder, RF layout and antenna tuning need physical review. The nRF52810 requires its supply decoupling, DEC capacitors, ground exposed pad, RF matching network and antenna, which are represented in the circuit.
 
 ## Main parts
 
@@ -13,11 +13,7 @@ This remains a design review prototype, not a fabrication release. The CR2032 ho
 | RF antenna | RFANT3216120A5T; JLCPCB C127629 |
 | Encoder | GT-EVA01AA-L1 |
 
-GPIO assignments are P0.11 for A, P0.12 for B, P0.13 for push and P0.14 for the debug LED. SWDIO, SWDCLK and reset are exposed on test pads. The CR2032 holder mounts on the underside; verify it clears the encoder and printed enclosure before fabrication.
-
-## Mechanical prototype
-
-See [mechanical/README.md](mechanical/README.md) for the enclosure and fit workflow. The enclosure geometry predates the coin-cell holder revision and must be rechecked against the holder and battery thickness.
+GPIO assignments are P0.11 for A, P0.12 for B, P0.13 for push and P0.14 for the debug LED. SWDIO, SWDCLK and reset are exposed on test pads. The CR2032 holder mounts on the underside; check clearance against any future enclosure before fabrication.
 
 ## Development
 

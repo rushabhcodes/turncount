@@ -1,4 +1,4 @@
-// Coin-cell nRF52810 prototype. Enclosure and RF fit still need verification.
+// Coin-cell nRF52810 prototype. RF fit still needs verification.
 import { Fragment } from "react"
 import { assembly } from "@tscircuit/core"
 import { CoinCellPower } from "./components/CoinCellPower"
@@ -7,7 +7,6 @@ import { KT_0603R } from "./imports/KT_0603R"
 import { NRF52810_QFAA_R } from "./imports/NRF52810_QFAA_R"
 import { RFANT3216120A5T } from "./imports/RFANT3216120A5T"
 import { X201632MKB4SI } from "./imports/X201632MKB4SI"
-import { EnclosureAssembly } from "./mechanical/EnclosureAssembly"
 // The imported locating holes sit 1.4 mm below the shaft axis in the drawing.
 // Shift the imported anchor so the mechanical shaft axis remains at (0, 0).
 const encoderFootprintOffsetY = -1.072594
@@ -84,7 +83,7 @@ const TurnCountBoard = () => (
     </schematicsheet>
 
     <schematicsheet name="Radio" displayName="3 · BLE and programming"
-      sheetIndex={2} sheetWidth="170mm" sheetHeight="180mm">
+      sheetIndex={2} sheetWidth="460mm" sheetHeight="550mm">
       <schematicsection name="radio" displayName="nRF52810 and debug" />
       <NRF52810_QFAA_R name="U1"
         schSectionName="radio" schX={0} schY={0} pcbX={8} pcbY={4} />
@@ -93,24 +92,24 @@ const TurnCountBoard = () => (
       <schematictext schX={0} schY={3.9} fontSize={0.24}
         anchor="center" color="#334155" text="CR2032 direct supply · SWD programming" />
       <schematicsection name="hf_clock" displayName="32 MHz radio clock" />
-      <X201632MKB4SI name="X1" noSchematicRepresentation pcbX={7} pcbY={14} pcbRotation={90} />
-      <schematicsymbol name="X1_SYMBOL" displayName="X1 · 32 MHz" chipRef=".X1"
+      <X201632MKB4SI name="Y1" noSchematicRepresentation pcbX={7} pcbY={14} pcbRotation={90} />
+      <schematicsymbol name="Y1_SYMBOL" displayName="Y1 · 32 MHz" chipRef=".Y1"
         symbolName="crystal_4pin" schSectionName="hf_clock" schX={4} schY={7}
         connections={{
-          pin1: ".X1 > .XTAL1", gnd1: ".X1 > .GND1",
-          pin3: ".X1 > .XTAL2", gnd2: ".X1 > .GND2",
+          pin1: ".Y1 > .XTAL1", gnd1: ".Y1 > .GND1",
+          pin3: ".Y1 > .XTAL2", gnd2: ".Y1 > .GND2",
         }} />
       <capacitor name="C13" capacitance="12pF" footprint="0603"
         schSectionName="hf_clock" schX={1} schY={7} schRotation={-90} pcbX={4} pcbY={14} />
       <capacitor name="C14" capacitance="12pF" footprint="0603"
         schSectionName="hf_clock" schX={7} schY={7} schRotation={-90} pcbX={10.5} pcbY={14} />
-      <trace from="U1.XC1" to="X1.XTAL1" />
-      <trace from="U1.XC2" to="X1.XTAL2" />
-      <trace from="X1.GND1" to="net.GND" />
-      <trace from="X1.GND2" to="net.GND" />
-      <trace from="X1.XTAL1" to="C13.pin1" />
+      <trace name="HF_XTAL1_MCU" from="U1.XC1" to="Y1.XTAL1" />
+      <trace name="HF_XTAL2_MCU" from="U1.XC2" to="Y1.XTAL2" />
+      <trace from="Y1.GND1" to="net.GND" />
+      <trace from="Y1.GND2" to="net.GND" />
+      <trace name="HF_XTAL1_LOAD" from="Y1.XTAL1" to="C13.pin1" />
       <trace from="C13.pin2" to="net.GND" />
-      <trace from="X1.XTAL2" to="C14.pin1" />
+      <trace name="HF_XTAL2_LOAD" from="Y1.XTAL2" to="C14.pin1" />
       <trace from="C14.pin2" to="net.GND" />
       <capacitor name="C1" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={3} schRotation={-90} pcbX={5.5} pcbY={-3} />
       <capacitor name="C2" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={0} schRotation={-90} pcbX={12} pcbY={-3} />
@@ -140,7 +139,7 @@ const TurnCountBoard = () => (
       ))}
       {radioTraces.map(([from, to], i) => (
         <Fragment key={`radio-trace-${i}`}>
-          <trace from={from} to={to} />
+          <trace name={`RADIO_LINK_${i + 1}`} from={from} to={to} />
         </Fragment>
       ))}
     </schematicsheet>
@@ -157,6 +156,5 @@ const TurnCountBoard = () => (
 export default () => (
   <assembly.device name="TurnCountDevice">
     <TurnCountBoard />
-    <EnclosureAssembly />
   </assembly.device>
 )
