@@ -34,6 +34,13 @@ const connections: [string, string][] = [
   ["TP10.pin1", "net.USB_5V"], ["TP11.pin1", "net.CHARGE_N"],
   ["TP12.pin1", "net.USB_PRESENT_N"],
 ]
+const directTraceNames: Record<string, string> = {
+  "J1.CC1->R8.pin1": "USB_CC1",
+  "J1.CC2->R9.pin1": "USB_CC2",
+  "J2.NTC->U2.TS": "BAT_NTC",
+  "U2.ISET->R10.pin1": "CHARGE_ISET",
+  "U2.ILIM->R11.pin1": "INPUT_ILIM",
+}
 
 export const RechargeablePower = () => (
   <>
@@ -45,6 +52,23 @@ export const RechargeablePower = () => (
       pcbX={-12} pcbY={11} />
     <TPS7A0230PDBVR name="U3" schSectionName="power" schX={6} schY={0}
       pcbX={-4} pcbY={14} pcbRotation={180} />
+
+    <schematictext schX={-7} schY={2.7} fontSize={0.24}
+      anchor="center" color="#334155" text="USB-C 5 V power input" />
+    <schematictext schX={-7} schY={2.3} fontSize={0.24}
+      anchor="center" color="#334155" text="100 mA USB input limit" />
+    <schematictext schX={-1} schY={8.2} fontSize={0.24}
+      anchor="center" color="#334155" text="Protected 1S LiPo connector" />
+    <schematictext schX={-1} schY={7.8} fontSize={0.24}
+      anchor="center" color="#334155" text="4.2 V max; 10 k NTC lead" />
+    <schematictext schX={0.5} schY={3.6} fontSize={0.24}
+      anchor="center" color="#334155" text="BQ24074 charger + power path" />
+    <schematictext schX={0.5} schY={3.2} fontSize={0.24}
+      anchor="center" color="#334155" text="4.2 V cell; USB100 mode" />
+    <schematictext schX={6} schY={2.2} fontSize={0.24}
+      anchor="center" color="#334155" text="3.0 V low-dropout regulator" />
+    <schematictext schX={6} schY={1.8} fontSize={0.24}
+      anchor="center" color="#334155" text="200 mA rated output" />
 
     <resistor name="R8" resistance="5.1k" footprint="jlcpcb:C25905" supplierPartNumbers={{ jlcpcb: ["C25905"] }}
       schSectionName="power" schX={-8} schY={-5} schRotation={-90} pcbX={-6.5} pcbY={-14} />
@@ -87,7 +111,7 @@ export const RechargeablePower = () => (
       text="1S protected LiPo reserve: 20 x 30 mm; cell TBD" />
     {connections.map(([from, to], i) => (
       <Fragment key={`power-trace-${i}`}>
-        <trace name={`power_${i}`} from={from} to={to} />
+        <trace name={directTraceNames[`${from}->${to}`] ?? `power_${i}`} from={from} to={to} />
       </Fragment>
     ))}
   </>

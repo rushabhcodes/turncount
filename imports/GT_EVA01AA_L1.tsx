@@ -17,7 +17,6 @@ export const GT_EVA01AA_L1 = (props: ChipProps<typeof pinLabels>) => {
       symbol={
         <symbol>
           <schematicrect schX={0} schY={0} width={1} height={0.8} strokeWidth={0.02} color="#880000" />
-          <schematictext text="{NAME}" schX={0} schY={0} fontSize={0.16} />
           <schematicpath points={[{"x":0.2,"y":0.2},{"x":0.06,"y":0.2}]} strokeColor="#880000" />
           <schematicpath points={[{"x":-0.12,"y":0.2},{"x":-0.06,"y":0.2}]} strokeColor="#880000" />
           <schematicpath points={[{"x":-0.08,"y":0.3},{"x":0.06,"y":0.22}]} strokeColor="#880000" />

@@ -75,6 +75,10 @@ const TurnCountBoard = () => (
       <schematicsection name="inputs" displayName="Encoder and input filters" />
       <GT_EVA01AA_L1 name="ENC1"
         schSectionName="inputs" schX={-4} schY={0} pcbX={0} pcbY={encoderFootprintOffsetY} />
+      <schematictext schX={-4} schY={2.7} fontSize={0.24}
+        anchor="center" color="#334155" text="12-detent rotary encoder + push" />
+      <schematictext schX={-4} schY={2.3} fontSize={0.24}
+        anchor="center" color="#334155" text="12 V / 50 mA contact rating" />
       {signalNames.map((signal, i) => (
         <Fragment key={signal}>
           <resistor name={`R${i + 1}`} resistance="1k" footprint="jlcpcb:C11702" supplierPartNumbers={{ jlcpcb: ["C11702"] }} schSectionName="inputs" schX={0} schY={3 - i * 3} pcbX={-15.5 + i * 3} pcbY={-9} />
@@ -94,12 +98,18 @@ const TurnCountBoard = () => (
       <schematicsection name="radio" displayName="BLE module and debug" />
       <MDBT42Q_512KV2 name="U1"
         schSectionName="radio" schX={0} schY={0} pcbX={16.5} pcbY={-2.05} />
+      <schematictext schX={0} schY={4.3} fontSize={0.24}
+        anchor="center" color="#334155" text="nRF52832 BLE module" />
+      <schematictext schX={0} schY={3.9} fontSize={0.24}
+        anchor="center" color="#334155" text="3.0 V supply; SWD programming" />
       <capacitor name="C1" capacitance="100nF" footprint="jlcpcb:C1525" supplierPartNumbers={{ jlcpcb: ["C1525"] }} schSectionName="radio" schX={-4} schY={3} schRotation={-90} pcbX={10.5} pcbY={-9.5} />
       <capacitor name="C2" capacitance="10uF" footprint="0805" schSectionName="radio" schX={-4} schY={0} schRotation={-90} pcbX={14} pcbY={-10.5} />
       <resistor name="R7" resistance="100k" footprint="jlcpcb:C25741" supplierPartNumbers={{ jlcpcb: ["C25741"] }} schSectionName="radio" schX={-4} schY={-3} schRotation={-90} pcbX={17.5} pcbY={-10.5} />
       <resistor name="R14" resistance="1k" footprint="jlcpcb:C11702" supplierPartNumbers={{ jlcpcb: ["C11702"] }} schSectionName="radio" schX={0} schY={-4.5} schRotation={-90} pcbX={-5.5} pcbY={-11} />
       <KT_0603R name="LED1" color="red" schSectionName="radio" schX={0} schY={-6} schRotation={-90} pcbX={-2} pcbY={-11} />
-      <trace name="radio_reset_pullup" from="R7.pin2" to="U1.RESET"
+      <schematictext schX={2.5} schY={-6} fontSize={0.24}
+        anchor="center" color="#334155" text="Debug LED, 3 V GPIO via 1 k" />
+      <trace name="RADIO_RESET" from="R7.pin2" to="U1.RESET"
         pcbRouteHints={[{ x: 19.5, y: 0.8, via: true, to_layer: "top" }]} />
       {[[5, -11], [7, -11], [9, -11], [5, -13], [7, -13], [9, -13], [11, -13]].map(([x, y], i) => (
         <Fragment key={`testpoint-${i}`}>
