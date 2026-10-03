@@ -15,8 +15,8 @@ plug.
 | Fluted rotating cap | `output/03_rotating_cap.3mf` | PETG or ASA |
 | Optional phone-contact ring | `output/04_phone_grip_TPU.3mf` | TPU |
 
-The 3MF files are print oriented. The `*_assembly.glb` files are recentered
-viewer models; do not print those. The circuit uses the GLB files so the
+The 3MF files are print oriented. The `*_assembly.obj` files are recentered
+viewer models; do not print those. The circuit uses the OBJ files so the
 published 3D viewer can render the enclosure.
 The original vendor CAD links in the
 imported PCB components remain untouched.
