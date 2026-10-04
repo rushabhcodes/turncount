@@ -55,7 +55,6 @@ const TurnCountBoard = () => (
     schLayout={{ layoutMode: "relative" }}>
       <schematicsheet name="Power" displayName="1 · Coin-cell power"
       sheetIndex={0} sheetWidth="260mm" sheetHeight="210mm">
-      <schematicsection name="power" displayName="CR2032 battery and supply decoupling" />
       <CoinCellPower />
     </schematicsheet>
 
@@ -82,27 +81,27 @@ const TurnCountBoard = () => (
       ))}
     </schematicsheet>
 
-    <schematicsheet name="Radio" displayName="3 · BLE and programming"
-      sheetIndex={2} sheetWidth="460mm" sheetHeight="550mm">
-      <schematicsection name="radio" displayName="nRF52810 and debug" />
+    <schematicsheet name="Controller" displayName="3 · Controller, RF and debug"
+      sheetIndex={2} sheetWidth="260mm" sheetHeight="210mm">
+      <schematicsection name="radio" displayName="nRF52810 MCU" />
       <NRF52810_QFAA_R name="U1"
-        schSectionName="radio" schX={0} schY={0} pcbX={8} pcbY={4} />
-      <schematictext schX={0} schY={4.3} fontSize={0.24}
+        schSectionName="radio" schX={-0.37} schY={0} pcbX={8} pcbY={4} />
+      <schematictext schX={0} schY={4.7} fontSize={0.24}
         anchor="center" color="#334155" text="Nordic nRF52810-QFAA-R · bare QFN-48" />
-      <schematictext schX={0} schY={3.9} fontSize={0.24}
+      <schematictext schX={0} schY={4.3} fontSize={0.24}
         anchor="center" color="#334155" text="CR2032 direct supply · SWD programming" />
-      <schematicsection name="hf_clock" displayName="32 MHz radio clock" />
+      <schematicsection name="hf_clock" displayName="HF crystal" />
       <X201632MKB4SI name="Y1" noSchematicRepresentation pcbX={7} pcbY={14} pcbRotation={90} />
       <schematicsymbol name="Y1_SYMBOL" displayName="Y1 · 32 MHz" chipRef=".Y1"
-        symbolName="crystal_4pin" schSectionName="hf_clock" schX={4} schY={7}
+        symbolName="crystal_4pin" schSectionName="hf_clock" schX={0} schY={7}
         connections={{
           pin1: ".Y1 > .XTAL1", gnd1: ".Y1 > .GND1",
           pin3: ".Y1 > .XTAL2", gnd2: ".Y1 > .GND2",
         }} />
       <capacitor name="C13" capacitance="12pF" footprint="0603"
-        schSectionName="hf_clock" schX={1} schY={7} schRotation={-90} pcbX={4} pcbY={14} />
+        schSectionName="hf_clock" schX={-3} schY={7} schRotation={-90} pcbX={4} pcbY={14} />
       <capacitor name="C14" capacitance="12pF" footprint="0603"
-        schSectionName="hf_clock" schX={7} schY={7} schRotation={-90} pcbX={10.5} pcbY={14} />
+        schSectionName="hf_clock" schX={3} schY={7} schRotation={-90} pcbX={10.5} pcbY={14} />
       <trace name="HF_XTAL1_MCU" from="U1.XC1" to="Y1.XTAL1" />
       <trace name="HF_XTAL2_MCU" from="U1.XC2" to="Y1.XTAL2" />
       <trace from="Y1.GND1" to="net.GND" />
@@ -111,35 +110,35 @@ const TurnCountBoard = () => (
       <trace from="C13.pin2" to="net.GND" />
       <trace name="HF_XTAL2_LOAD" from="Y1.XTAL2" to="C14.pin1" />
       <trace from="C14.pin2" to="net.GND" />
-      <capacitor name="C1" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={3} schRotation={-90} pcbX={5.5} pcbY={-3} />
-      <capacitor name="C2" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={0} schRotation={-90} pcbX={12} pcbY={-3} />
-      <capacitor name="C8" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={-4} schRotation={-90} pcbX={2} pcbY={9} />
-      <capacitor name="C9" capacitance="100pF" footprint="0603" schSectionName="radio" schX={-4} schY={-6} schRotation={-90} pcbX={5} pcbY={10} pcbRotation={180} />
-      <capacitor name="C10" capacitance="100nF" footprint="0603" schSectionName="radio" schX={-4} schY={-9} schRotation={-90} pcbX={9} pcbY={10} />
-      <capacitor name="C11" capacitance="1uF" footprint="0603" schSectionName="radio" schX={-4} schY={-12} schRotation={-90} pcbX={13} pcbY={10} />
-      <inductor name="L1" inductance="3.9nH" footprint="0402" schSectionName="radio" schX={8} schY={5} pcbX={13} pcbY={1} />
-      <capacitor name="C12" capacitance="0.8pF" footprint="jlcpcb:C88902" schSectionName="radio" schX={8} schY={3} schRotation={-90} pcbX={12} pcbY={-1} />
-      <inductor name="L2" inductance="6.8nH" footprint="0402" schSectionName="radio" schX={9} schY={1} pcbX={15.5} pcbY={1} />
-      <RFANT3216120A5T name="ANT1" schSectionName="radio" schX={12} schY={1} pcbX={19.5} pcbY={1} />
+      <capacitor name="C1" capacitance="100nF" footprint="0603" schSectionName="radio" schX={3.74} schY={4} schRotation={-90} pcbX={5.5} pcbY={-3} />
+      <capacitor name="C2" capacitance="100nF" footprint="0603" schSectionName="radio" schX={3.01} schY={2} schRotation={-90} pcbX={12} pcbY={-3} />
+      <capacitor name="C8" capacitance="100nF" footprint="0603" schSectionName="radio" schX={6.5} schY={0} schRotation={-90} pcbX={2} pcbY={9} />
+      <capacitor name="C9" capacitance="100pF" footprint="0603" schSectionName="radio" schX={4.15} schY={-2} schRotation={-90} pcbX={5} pcbY={10} pcbRotation={180} />
+      <capacitor name="C10" capacitance="100nF" footprint="0603" schSectionName="radio" schX={4.8} schY={-4} schRotation={-90} pcbX={9} pcbY={10} />
+      <capacitor name="C11" capacitance="1uF" footprint="0603" schSectionName="radio" schX={5.45} schY={-6} schRotation={-90} pcbX={13} pcbY={10} />
+      <inductor name="L1" inductance="3.9nH" footprint="0402" schSectionName="radio" schX={4.46} schY={3} pcbX={13} pcbY={1} />
+      <capacitor name="C12" capacitance="0.8pF" footprint="jlcpcb:C88902" schSectionName="radio" schX={4.11} schY={1} schRotation={-90} pcbX={12} pcbY={-1} />
+      <inductor name="L2" inductance="6.8nH" footprint="0402" schSectionName="radio" schX={7} schY={3} pcbX={15.5} pcbY={1} />
+      <RFANT3216120A5T name="ANT1" schSectionName="radio" schX={9} schY={3} pcbX={19.5} pcbY={1} />
       <trace name="RF_CHIP_MATCH" from="U1.ANT" to="L1.pin1" />
       <trace name="RF_SHUNT_C" from="L1.pin1" to="C12.pin1" />
       <trace from="C12.pin2" to="net.GND" />
       <trace name="RF_MATCH_SERIES" from="L1.pin2" to="L2.pin1" />
       <trace name="RF_ANT_FEED" from="L2.pin2" to="ANT1.FEED" />
-      <resistor name="R7" resistance="100k" footprint="jlcpcb:C25741" supplierPartNumbers={{ jlcpcb: ["C25741"] }} schSectionName="radio" schX={-1} schY={-5} schRotation={-90} pcbX={17.5} pcbY={-10.5} />
-      <resistor name="R14" resistance="1k" footprint="jlcpcb:C11702" supplierPartNumbers={{ jlcpcb: ["C11702"] }} schSectionName="radio" schX={0} schY={-4.5} schRotation={-90} pcbX={-5.5} pcbY={-11} />
-      <KT_0603R name="LED1" color="red" schSectionName="radio" schX={0} schY={-6} schRotation={-90} pcbX={-2} pcbY={-11} />
-      <schematictext schX={2.5} schY={-6} fontSize={0.24}
+      <resistor name="R7" resistance="100k" footprint="jlcpcb:C25741" supplierPartNumbers={{ jlcpcb: ["C25741"] }} schSectionName="radio" schX={-4} schY={-6} schRotation={-90} pcbX={17.5} pcbY={-10.5} />
+      <resistor name="R14" resistance="1k" footprint="jlcpcb:C11702" supplierPartNumbers={{ jlcpcb: ["C11702"] }} schSectionName="radio" schX={1} schY={-7} schRotation={-90} pcbX={-5.5} pcbY={-11} />
+      <KT_0603R name="LED1" color="red" schSectionName="radio" schX={1} schY={-9} schRotation={-90} pcbX={-2} pcbY={-11} />
+      <schematictext schX={3} schY={-9} fontSize={0.24}
         anchor="center" color="#334155" text="Debug LED, 3 V GPIO via 1 k" />
       <trace name="RADIO_RESET" from="R7.pin2" to="U1.RESET" />
-      {[[5, -11], [7, -11], [9, -11], [5, -13], [7, -13], [9, -13], [11, -13]].map(([x, y], i) => (
+      {[[5, -11, -7, 1], [7, -11, -7, -1], [9, -11, -7, -3], [5, -13, -7, -5], [7, -13, -7, -7], [9, -13, 9, -1], [11, -13, 9, -3]].map(([pcbX, pcbY, schX, schY], i) => (
         <Fragment key={`testpoint-${i}`}>
-          <testpoint name={`TP${i + 1}`} footprintVariant="pad" padDiameter="1mm" schSectionName="radio" schX={6} schY={7 - i * 2} pcbX={x} pcbY={y} />
+          <testpoint name={`TP${i + 1}`} footprintVariant="pad" padDiameter="1mm" schSectionName="radio" schX={schX} schY={schY} pcbX={pcbX} pcbY={pcbY} />
         </Fragment>
       ))}
       {radioTraces.map(([from, to], i) => (
         <Fragment key={`radio-trace-${i}`}>
-          <trace name={`RADIO_LINK_${i + 1}`} from={from} to={to} />
+          <trace from={from} to={to} />
         </Fragment>
       ))}
     </schematicsheet>
