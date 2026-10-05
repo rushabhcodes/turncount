@@ -1,0 +1,66 @@
+[
+  {
+    "name": "netlist",
+    "passed": true
+  },
+  {
+    "name": "source",
+    "passed": true
+  },
+  {
+    "name": "pin_specification",
+    "passed": true
+  },
+  {
+    "name": "schematic-placement",
+    "passed": true
+  },
+  {
+    "name": "routing-difficulty",
+    "passed": true
+  },
+  {
+    "name": "placement",
+    "passed": true
+  },
+  {
+    "name": "typecheck",
+    "passed": true
+  },
+  {
+    "name": "build",
+    "passed": true
+  },
+  {
+    "name": "shorts",
+    "passed": true
+  },
+  {
+    "name": "trace-length-U1-ANT",
+    "passed": true
+  },
+  {
+    "name": "trace-length-U1-XC1",
+    "passed": true
+  },
+  {
+    "name": "trace-length-U1-XC2",
+    "passed": true
+  },
+  {
+    "name": "trace-length-net-GND",
+    "passed": true
+  },
+  {
+    "name": "trace-length-net-VBAT",
+    "passed": true
+  },
+  {
+    "name": "manufacturing-dimensions",
+    "passed": true,
+    "viaCount": 71,
+    "viaHoleDiameter": 0.3,
+    "viaPadDiameter": 0.6,
+    "minimumTraceWidth": 0.15
+  }
+]

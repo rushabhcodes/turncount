@@ -3,7 +3,7 @@ import { MY_2032_16 } from "../imports/MY_2032_16"
 export const CoinCellPower = () => (
   <>
     <MY_2032_16 name="BT1" schX={-2} schY={0}
-      pcbX={0} pcbY={0} pcbRotation={90} layer="bottom" />
+      pcbX={-9.5} pcbY={0} pcbRotation={90} layer="bottom" />
     <schematictext schX={0} schY={2.5} fontSize={0.24}
       anchor="center" color="#334155" text="CR2032 coin cell · 3 V nominal" />
     <capacitor name="C7" capacitance="4.7uF" footprint="0603"
