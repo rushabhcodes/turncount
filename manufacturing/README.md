@@ -1,4 +1,4 @@
-# TurnCount fabrication bundle — 1.0.17
+# TurnCount fabrication bundle — 1.0.19
 
 `turncount-gerbers.zip` contains the latest routed two-layer board export.
 Use 1.6 mm FR-4, 1 oz copper, green solder mask, standard outline tolerance,
