@@ -39,6 +39,7 @@ try {
   }
   await check('typecheck', ['run', 'typecheck'], 'npm')
   await check('build', ['tsci', 'build', '--pcb-png', '--schematic-png'])
+  await check('decoupling', ['scripts/check-decoupling.mjs'], 'node')
   await check('shorts', ['tsci', 'check', 'shorts', 'dist/index/circuit.json'])
   for (const targets of [['U1.XC1', 'U1.XC2', 'U1.ANT'], ['net.VBAT', 'net.GND']]) {
     const checked = await Promise.allSettled(targets.map(target => check(

@@ -32,12 +32,16 @@ const pinLabels = {
 } as const
 
 const pinAttributes = {
-  pin13: {requiresPower: true},
+  pin1: {shouldHaveDecouplingCapacitor: true, recommendedDecouplingCapacitorCapacitance: "100nF"},
+  pin32: {shouldHaveDecouplingCapacitor: true, recommendedDecouplingCapacitorCapacitance: "100pF"},
+  pin33: {shouldHaveDecouplingCapacitor: true, recommendedDecouplingCapacitorCapacitance: "100nF"},
+  pin46: {shouldHaveDecouplingCapacitor: true, recommendedDecouplingCapacitorCapacitance: "1uF"},
+  pin13: {requiresPower: true, shouldHaveDecouplingCapacitor: true, recommendedDecouplingCapacitorCapacitance: "100nF"},
   pin31: {requiresGround: true},
-  pin36: {requiresPower: true},
+  pin36: {requiresPower: true, shouldHaveDecouplingCapacitor: true, recommendedDecouplingCapacitorCapacitance: "100nF"},
   pin44: {doNotConnect: true},
   pin45: {requiresGround: true},
-  pin48: {requiresPower: true}
+  pin48: {requiresPower: true, shouldHaveDecouplingCapacitor: true, recommendedDecouplingCapacitorCapacitance: "100nF"}
 } as const
 
 export const NRF52810_QFAA_R = (props: ChipProps<typeof pinLabels>) => {

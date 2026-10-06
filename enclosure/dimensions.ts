@@ -1,0 +1,32 @@
+// Millimetres. PCB mid-plane is z=0; encoder rotation axis is x=y=0.
+export const dimensions = {
+  pcbRadius: 24,
+  pcbThickness: 1.6,
+  baseRadius: 28.5,
+  cavityRadius: 24.8,
+  baseBottom: -8.5,
+  floorTop: -5.5,
+  baseTop: 4.8,
+  lidTop: 6.6,
+  canopyRadius: 30,
+  canopyBottom: 9,
+  canopyTop: 11.4,
+  skirtBottom: -8.45,
+  skirtInnerRadius: 29.1,
+  retentionLipRadius: 28.7,
+  baseBeadRadius: 28.85,
+  bearingRadius: 2.5,
+  bearingBoreRadius: 2.85,
+  squareDrive: 0.76,
+  driveBottom: 3.55,
+  magnetOuterDiameter: 54.1,
+  magnetInnerDiameter: 46,
+  magnetThickness: 2,
+  magnetPocketOuterDiameter: 54.5,
+  magnetPocketInnerDiameter: 45.6,
+  magnetPocketDepth: 2.15,
+  contactFilmThickness: 0.8,
+  pressTravel: 0.2,
+} as const
+export const supportAngles = [90, 210, 330]
+export const latchAngles = [45, 165, 285]

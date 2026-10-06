@@ -16,11 +16,11 @@
     "passed": true
   },
   {
-    "name": "routing-difficulty",
+    "name": "placement",
     "passed": true
   },
   {
-    "name": "placement",
+    "name": "routing-difficulty",
     "passed": true
   },
   {
@@ -29,6 +29,10 @@
   },
   {
     "name": "build",
+    "passed": true
+  },
+  {
+    "name": "decoupling",
     "passed": true
   },
   {
@@ -48,17 +52,17 @@
     "passed": true
   },
   {
-    "name": "trace-length-net-GND",
+    "name": "trace-length-net-VBAT",
     "passed": true
   },
   {
-    "name": "trace-length-net-VBAT",
+    "name": "trace-length-net-GND",
     "passed": true
   },
   {
     "name": "manufacturing-dimensions",
     "passed": true,
-    "viaCount": 71,
+    "viaCount": 47,
     "viaHoleDiameter": 0.3,
     "viaPadDiameter": 0.6,
     "minimumTraceWidth": 0.15

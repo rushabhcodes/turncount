@@ -1,0 +1,677 @@
+[
+  {
+    "name": "BASE / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0.0007871129351502137
+  },
+  {
+    "name": "KNOB 0° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 0° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 0° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 0° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 15° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 15° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 15° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 15° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 30° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 30° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 30° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 30° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 45° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 45° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 45° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 45° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 60° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 60° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 60° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 60° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 90° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 90° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 90° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 90° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 120° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 120° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 120° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 120° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 180° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 180° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 180° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 180° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 240° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 240° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 240° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 240° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 300° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 300° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 300° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 300° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 345° press 0 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 345° press 0 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 345° press 0.2 / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "KNOB 345° press 0.2 / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "Magnet / base pocket",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "PCB / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "PCB / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "PCB / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "Battery holder / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "Battery holder / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C7 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C7 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C7 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R1 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R1 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R1 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R4 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R4 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R4 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C3 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C3 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C3 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R2 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R2 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R2 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R5 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R5 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R5 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C4 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C4 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C4 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R3 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R3 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R3 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R6 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R6 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R6 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C5 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C5 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C5 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "U1 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "U1 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "U1 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "X1 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "X1 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "X1 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C13 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C13 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C13 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C14 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C14 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C14 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C1 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C1 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C1 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C2 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C2 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C2 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C15 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C15 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C15 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C8 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C8 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C8 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C9 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C9 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C9 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C10 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C10 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C10 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C11 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C11 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C11 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "L1 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "L1 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "L1 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C12 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C12 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "C12 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "L2 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "L2 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "L2 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "ANT1 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "ANT1 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "ANT1 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R7 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R7 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R7 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R14 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R14 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "R14 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "LED1 envelope / BASE",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "LED1 envelope / LID",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  },
+  {
+    "name": "LED1 envelope / KNOB",
+    "passed": true,
+    "overlapVolumeMm3": 0
+  }
+]

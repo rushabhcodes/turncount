@@ -1,0 +1,51 @@
+[
+  {
+    "file": "base.stl",
+    "triangles": 4176,
+    "nonManifoldEdges": 0,
+    "passed": true,
+    "kernel": "manifold-3d"
+  },
+  {
+    "file": "lid.stl",
+    "triangles": 3552,
+    "nonManifoldEdges": 0,
+    "passed": true,
+    "kernel": "manifold-3d"
+  },
+  {
+    "file": "knob.stl",
+    "triangles": 3600,
+    "nonManifoldEdges": 0,
+    "passed": true,
+    "kernel": "manifold-3d"
+  },
+  {
+    "file": "tip-fit-0.72mm.stl",
+    "triangles": 524,
+    "nonManifoldEdges": 0,
+    "passed": true,
+    "kernel": "manifold-3d"
+  },
+  {
+    "file": "tip-fit-0.76mm.stl",
+    "triangles": 524,
+    "nonManifoldEdges": 0,
+    "passed": true,
+    "kernel": "manifold-3d"
+  },
+  {
+    "file": "tip-fit-0.80mm.stl",
+    "triangles": 524,
+    "nonManifoldEdges": 0,
+    "passed": true,
+    "kernel": "manifold-3d"
+  },
+  {
+    "file": "tip-fit-0.84mm.stl",
+    "triangles": 524,
+    "nonManifoldEdges": 0,
+    "passed": true,
+    "kernel": "manifold-3d"
+  }
+]

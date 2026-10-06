@@ -50,6 +50,35 @@ The CLI doctor reports an npm authentication-header logging diagnostic despite
 matching registry credentials. This is separate from the circuit checks; registry
 publication verifies the active session directly.
 
+## Umbrella enclosure
+
+The default assembly now includes a 60 mm full-depth rotating cover, a snap-in lid,
+a base with integrated PCB supports, and a pocket for an accessory-side MagSafe
+magnet ring. See [the print and assembly guide](enclosure/ASSEMBLY.md). The complete
+PCB remains in `TurnCountBoard.tsx`; `assembly.cadassembly` groups the enclosure
+parts alongside it in the default `assembly.device`, following the
+[tscircuit assembly documentation](https://docs.tscircuit.com/elements/assembly-cadassembly).
+
+Open `enclosure/output/preview.html` for assembled, exploded, and underside views.
+The output directory also includes three printable STL parts, tip-fit coupons,
+and assembled/exploded GLB models. Measure the purchased magnet module and fit-test
+the small encoder drive before printing the complete enclosure.
+
+## Local decoupling
+
+Each nRF52810 VDD pin now has its own 100 nF capacitor: C1/VDD1,
+C2/VDD2, and C15/VDD3. C8–C11 decouple DEC1–DEC4 with the Nordic
+reference values. The local supply paths have a 3 mm limit and
+`npm run check` verifies their actual continuous top-layer copper paths,
+capacitor values, and ground connections. It fails if any local path is
+missing or too long. Reference values follow the [Nordic nRF52810
+reference circuitry](https://docs.nordicsemi.com/r/bundle/ps_nrf52810/page/ref_circuitry.html). Shared ground routing is checked separately for
+connectivity and copper shorts.
+
+The project pins the latest registry releases checked on 6 October 2026:
+`tscircuit` 0.0.2745 and `@tscircuit/cli` 0.1.2252. `circuit-json` stays at
+0.0.515, the version required by the CLI's peer dependency.
+
 ## Build
 
 ```sh
